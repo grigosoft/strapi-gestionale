@@ -13,10 +13,10 @@
     "esbuild": "^0.20.1"
   },
   "dependencies": {
-    "@strapi/plugin-cloud": "4.21.1",
-    "@strapi/plugin-i18n": "4.21.1",
-    "@strapi/plugin-users-permissions": "4.21.1",
-    "@strapi/strapi": "4.21.1",
+    "@strapi/plugin-cloud": "4.24.2",
+    "@strapi/plugin-i18n": "4.24.2",
+    "@strapi/plugin-users-permissions": "4.24.2",
+    "@strapi/strapi": "4.24.2",
     "@svgdotjs/svg.js": "^3.2.0",
     "better-sqlite3": "8.6.0",
     "mysql": "^2.18.1",
