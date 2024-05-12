@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "preventivo_linee",
+  "info": {
+    "singularName": "preventivo-linea",
+    "pluralName": "preventivo-linee",
+    "displayName": "PreventivoLinea",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "dati": {
+      "type": "component",
+      "repeatable": false,
+      "component": "documento.linea",
+      "required": true
+    },
+    "personalizzazione": {
+      "type": "component",
+      "repeatable": false,
+      "component": "pers.personalizzazione"
+    },
+    "lavorazione": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::lavorazione.lavorazione",
+      "mappedBy": "preventivoLinea"
+    },
+    "preventivo": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::preventivo.preventivo",
+      "inversedBy": "linee"
+    }
+  }
+}

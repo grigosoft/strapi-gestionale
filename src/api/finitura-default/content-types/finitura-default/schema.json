@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "finiture_default",
+  "info": {
+    "singularName": "finitura-default",
+    "pluralName": "finiture-default",
+    "displayName": "FinituraDefault",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string",
+      "required": true
+    },
+    "prodotti": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::prodotto.prodotto",
+      "inversedBy": "finiture"
+    },
+    "finitureLato": {
+      "type": "component",
+      "repeatable": true,
+      "max": 4,
+      "component": "pers.finitura-lato"
+    }
+  }
+}

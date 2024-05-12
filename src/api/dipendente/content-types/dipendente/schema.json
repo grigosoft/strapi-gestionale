@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "dipendenti",
+  "info": {
+    "singularName": "dipendente",
+    "pluralName": "dipendenti",
+    "displayName": "Dipendente",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string",
+      "required": true
+    },
+    "cognome": {
+      "type": "string"
+    },
+    "login": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "dipendente"
+    },
+    "azienda": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::azienda.azienda",
+      "inversedBy": "dipendenti"
+    },
+    "rappresentante": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "clienti": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::utente.utente",
+      "mappedBy": "rappresentante"
+    },
+    "settori": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::settore.settore",
+      "mappedBy": "dipendenti"
+    },
+    "codiceFiscale": {
+      "type": "string",
+      "required": false,
+      "unique": true
+    }
+  }
+}

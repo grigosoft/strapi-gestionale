@@ -1,0 +1,97 @@
+{
+  "kind": "collectionType",
+  "collectionName": "aziende",
+  "info": {
+    "singularName": "azienda",
+    "pluralName": "aziende",
+    "displayName": "Azienda",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "indirizzoFatturazione": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utente.indirizzo",
+      "required": false
+    },
+    "commissioni": {
+      "type": "integer",
+      "max": 100,
+      "min": 0,
+      "required": true,
+      "default": 0
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "ico": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "metodoPagamentoPreferito": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::metodo-pagamento.metodo-pagamento"
+    },
+    "dipendenti": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::dipendente.dipendente",
+      "mappedBy": "azienda"
+    },
+    "denominazione": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "utenti": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::utente.utente",
+      "mappedBy": "azienda"
+    },
+    "partitaIva": {
+      "type": "string",
+      "unique": true
+    },
+    "codiceFiscale": {
+      "type": "string"
+    },
+    "codiceDestinatario": {
+      "type": "string"
+    },
+    "pec": {
+      "type": "email"
+    },
+    "bancaPreferita": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::banca.banca"
+    },
+    "sequenzeNumeriche": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::sequenza-numerica.sequenza-numerica",
+      "mappedBy": "azienda"
+    },
+    "banche": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::banca.banca",
+      "mappedBy": "azienda"
+    }
+  }
+}

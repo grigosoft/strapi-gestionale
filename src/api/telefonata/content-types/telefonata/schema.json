@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "telefonate",
+  "info": {
+    "singularName": "telefonata",
+    "pluralName": "telefonate",
+    "displayName": "Telefonata"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string"
+    },
+    "data": {
+      "type": "datetime"
+    },
+    "telefono": {
+      "type": "string"
+    },
+    "estensione": {
+      "type": "string"
+    }
+  }
+}

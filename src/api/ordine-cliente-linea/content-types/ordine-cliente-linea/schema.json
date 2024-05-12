@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ordine_cliente_linee",
+  "info": {
+    "singularName": "ordine-cliente-linea",
+    "pluralName": "ordine-cliente-linee",
+    "displayName": "OrdineClienteLinea",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "ordineCliente": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::ordine-cliente.ordine-cliente",
+      "inversedBy": "linee"
+    },
+    "dati": {
+      "type": "component",
+      "repeatable": false,
+      "component": "documento.linea",
+      "required": true
+    },
+    "personalizzazione": {
+      "type": "component",
+      "repeatable": false,
+      "component": "pers.personalizzazione"
+    },
+    "lavorazione": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::lavorazione.lavorazione",
+      "mappedBy": "ordineClienteLinea"
+    }
+  }
+}

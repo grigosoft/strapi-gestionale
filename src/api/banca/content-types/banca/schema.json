@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "banche",
+  "info": {
+    "singularName": "banca",
+    "pluralName": "banche",
+    "displayName": "Banca",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string",
+      "required": true,
+      "unique": false
+    },
+    "iban": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "metodiPagamento": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::metodo-pagamento.metodo-pagamento",
+      "inversedBy": "banche"
+    },
+    "azienda": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::azienda.azienda",
+      "inversedBy": "banche"
+    }
+  }
+}

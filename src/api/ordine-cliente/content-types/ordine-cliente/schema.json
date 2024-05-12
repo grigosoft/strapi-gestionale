@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ordini_cliente",
+  "info": {
+    "singularName": "ordine-cliente",
+    "pluralName": "ordini-cliente",
+    "displayName": "OrdineCliente",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "dati": {
+      "type": "component",
+      "repeatable": false,
+      "component": "documento.documento"
+    },
+    "dataSpedizione": {
+      "type": "date"
+    },
+    "utente": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::utente.utente",
+      "inversedBy": "ordini_cliente"
+    },
+    "documentiTrasporto": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::documento-trasporto.documento-trasporto",
+      "mappedBy": "ordineCliente"
+    },
+    "linee": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::ordine-cliente-linea.ordine-cliente-linea",
+      "mappedBy": "ordineCliente"
+    },
+    "preventivo": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::preventivo.preventivo",
+      "mappedBy": "ordineCliente"
+    }
+  }
+}

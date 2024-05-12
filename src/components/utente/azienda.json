@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_utente_aziendas",
+  "info": {
+    "displayName": "DatiFatturazioneBase",
+    "icon": "",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "partitaIva": {
+      "type": "string",
+      "required": false,
+      "unique": false
+    },
+    "codiceFiscale": {
+      "type": "string",
+      "required": false,
+      "unique": false
+    },
+    "codiceDestinatario": {
+      "type": "string"
+    },
+    "riferimentoAmministrazione": {
+      "type": "string"
+    },
+    "pec": {
+      "type": "email"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "documento_trasporto_linee",
+  "info": {
+    "singularName": "documento-trasporto-linea",
+    "pluralName": "documento-trasporto-linee",
+    "displayName": "DocumentoTrasportoLinea",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "documentoTrasporto": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::documento-trasporto.documento-trasporto",
+      "inversedBy": "linee"
+    },
+    "dati": {
+      "type": "component",
+      "repeatable": false,
+      "required": true,
+      "component": "documento.linea"
+    },
+    "personalizzazione": {
+      "type": "component",
+      "repeatable": false,
+      "component": "pers.personalizzazione"
+    },
+    "lavorazione": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::lavorazione.lavorazione",
+      "mappedBy": "documentoTrasportoLinea"
+    }
+  }
+}

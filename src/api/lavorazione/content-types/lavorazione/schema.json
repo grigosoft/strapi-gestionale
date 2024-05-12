@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lavorazioni",
+  "info": {
+    "singularName": "lavorazione",
+    "pluralName": "lavorazioni",
+    "displayName": "Lavorazione",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "preventivoLinea": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::preventivo-linea.preventivo-linea",
+      "inversedBy": "lavorazione"
+    },
+    "settoreCorrente": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::settore.settore",
+      "inversedBy": "lavorazioni"
+    },
+    "avanzamento": {
+      "type": "json"
+    },
+    "ordineClienteLinea": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::ordine-cliente-linea.ordine-cliente-linea",
+      "inversedBy": "lavorazione"
+    },
+    "documentoTrasportoLinea": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::documento-trasporto-linea.documento-trasporto-linea",
+      "inversedBy": "lavorazione"
+    },
+    "statoSettore": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::stato-settore.stato-settore"
+    }
+  }
+}

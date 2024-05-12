@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "stati_settore",
+  "info": {
+    "singularName": "stato-settore",
+    "pluralName": "stati-settore",
+    "displayName": "StatoSettore"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string",
+      "required": true
+    },
+    "descrizione": {
+      "type": "text"
+    },
+    "settore": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::settore.settore",
+      "inversedBy": "stati"
+    }
+  }
+}

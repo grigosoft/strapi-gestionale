@@ -1,0 +1,78 @@
+{
+  "kind": "collectionType",
+  "collectionName": "documenti_trasporto",
+  "info": {
+    "singularName": "documento-trasporto",
+    "pluralName": "documenti-trasporto",
+    "displayName": "DocumentoTrasporto",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "utente": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::utente.utente",
+      "inversedBy": "documenti_trasporto"
+    },
+    "dati": {
+      "type": "component",
+      "repeatable": false,
+      "required": true,
+      "component": "documento.documento"
+    },
+    "dataTrasporto": {
+      "type": "date"
+    },
+    "causale": {
+      "type": "enumeration",
+      "enum": [
+        "Vendita",
+        "Reso Lavorato"
+      ]
+    },
+    "porto": {
+      "type": "enumeration",
+      "enum": [
+        "Franco",
+        "Franco con addebito in fattura",
+        "Assegnato"
+      ]
+    },
+    "vettore": {
+      "type": "enumeration",
+      "enum": [
+        "Mittente",
+        "Destinatario",
+        "Vettore GLS",
+        "Vettore BRT",
+        "Vettore DHL",
+        "Vettore TNT",
+        "Vettore SDA",
+        "Vettore FedEx",
+        "Vettore"
+      ]
+    },
+    "ordineCliente": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::ordine-cliente.ordine-cliente",
+      "inversedBy": "documentiTrasporto"
+    },
+    "linee": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::documento-trasporto-linea.documento-trasporto-linea",
+      "mappedBy": "documentoTrasporto"
+    },
+    "preventivo": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::preventivo.preventivo",
+      "inversedBy": "documentiTrasporto"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bordature",
+  "info": {
+    "singularName": "bordatura",
+    "pluralName": "bordature",
+    "displayName": "Bordatura",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string",
+      "required": true
+    },
+    "foto": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "tessuti": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tessuto.tessuto",
+      "inversedBy": "bordature"
+    },
+    "accessori": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::accessorio.accessorio",
+      "mappedBy": "bordature"
+    }
+  }
+}

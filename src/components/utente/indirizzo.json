@@ -1,0 +1,41 @@
+{
+  "collectionName": "components_utente_indirizzos",
+  "info": {
+    "displayName": "Indirizzo",
+    "description": "",
+    "icon": "car"
+  },
+  "options": {},
+  "attributes": {
+    "denominazione": {
+      "type": "string",
+      "required": false
+    },
+    "via": {
+      "type": "string",
+      "required": false
+    },
+    "cap": {
+      "type": "string"
+    },
+    "citta": {
+      "type": "string",
+      "required": false
+    },
+    "provincia": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 2
+    },
+    "contatto": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utente.contatto"
+    },
+    "stato": {
+      "type": "string",
+      "required": true,
+      "default": "Italia"
+    }
+  }
+}

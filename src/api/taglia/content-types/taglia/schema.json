@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "taglie",
+  "info": {
+    "singularName": "taglia",
+    "pluralName": "taglie",
+    "displayName": "Taglia",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "descrizione": {
+      "type": "text"
+    },
+    "prodotti": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::prodotto.prodotto",
+      "mappedBy": "taglie"
+    }
+  }
+}

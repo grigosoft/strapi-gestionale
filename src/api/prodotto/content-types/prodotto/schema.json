@@ -1,0 +1,83 @@
+{
+  "kind": "collectionType",
+  "collectionName": "prodotti",
+  "info": {
+    "singularName": "prodotto",
+    "pluralName": "prodotti",
+    "displayName": "Prodotto",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "descrizione": {
+      "type": "text",
+      "required": true
+    },
+    "personalizzabile": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "media": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "tessuti": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tessuto.tessuto",
+      "inversedBy": "prodotti"
+    },
+    "codice": {
+      "type": "string"
+    },
+    "taglie": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::taglia.taglia",
+      "inversedBy": "prodotti"
+    },
+    "calcoloPrezzo": {
+      "type": "enumeration",
+      "enum": [
+        "Calcolatore",
+        "Listino"
+      ],
+      "default": "Listino",
+      "required": true
+    },
+    "prodottiDipendenti": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::prodotto.prodotto",
+      "inversedBy": "prodottiServiti"
+    },
+    "prodottiServiti": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::prodotto.prodotto",
+      "inversedBy": "prodottiDipendenti"
+    },
+    "finiture": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::finitura-default.finitura-default",
+      "mappedBy": "prodotti"
+    }
+  }
+}

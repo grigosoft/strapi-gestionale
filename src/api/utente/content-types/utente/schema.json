@@ -1,0 +1,181 @@
+{
+  "kind": "collectionType",
+  "collectionName": "utenti",
+  "info": {
+    "singularName": "utente",
+    "pluralName": "utenti",
+    "displayName": "Utente",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "login": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "utente"
+    },
+    "rappresentante": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::dipendente.dipendente",
+      "inversedBy": "clienti"
+    },
+    "indirizziSpedizione": {
+      "type": "component",
+      "repeatable": true,
+      "component": "utente.indirizzo"
+    },
+    "indirizzoFatturazione": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utente.indirizzo"
+    },
+    "cliente": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "fornitore": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "note": {
+      "type": "text"
+    },
+    "ivaDefault": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::iva.iva"
+    },
+    "listino": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::listino.listino",
+      "inversedBy": "utenti"
+    },
+    "metodoPagamento": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::metodo-pagamento.metodo-pagamento"
+    },
+    "iban": {
+      "type": "string"
+    },
+    "contatti": {
+      "type": "component",
+      "repeatable": true,
+      "component": "utente.contatto"
+    },
+    "sconto": {
+      "type": "integer",
+      "default": 0,
+      "max": 70
+    },
+    "denominazione": {
+      "type": "string",
+      "required": true
+    },
+    "preventivi": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::preventivo.preventivo",
+      "mappedBy": "utente"
+    },
+    "banca": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::banca.banca"
+    },
+    "azienda": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::azienda.azienda",
+      "inversedBy": "utenti"
+    },
+    "ordini_cliente": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::ordine-cliente.ordine-cliente",
+      "mappedBy": "utente"
+    },
+    "documenti_trasporto": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::documento-trasporto.documento-trasporto",
+      "mappedBy": "utente"
+    },
+    "partitaIva": {
+      "type": "string",
+      "unique": true
+    },
+    "codiceFiscale": {
+      "type": "string"
+    },
+    "codiceDestinatario": {
+      "type": "string"
+    },
+    "riferimentoAmministrazione": {
+      "type": "string"
+    },
+    "pec": {
+      "type": "email"
+    },
+    "idEsterno": {
+      "type": "string"
+    },
+    "ultimoAcquisto": {
+      "type": "date"
+    },
+    "ultimaRichiesta": {
+      "type": "date"
+    },
+    "portoDefault": {
+      "type": "enumeration",
+      "enum": [
+        "Franco",
+        "Franco con addebito in fattura",
+        "Assegnato"
+      ]
+    },
+    "vettoreDefault": {
+      "type": "enumeration",
+      "enum": [
+        "Mittente",
+        "Destinatario",
+        "Vettore GLS",
+        "Vettore BRT",
+        "Vettore DHL",
+        "Vettore TNT",
+        "Vettore SDA",
+        "Vettore FedEx",
+        "Vettore"
+      ]
+    },
+    "ultimaImportazione": {
+      "private": true,
+      "type": "datetime"
+    },
+    "idIndirizzoSpedizioneDefault": {
+      "type": "integer"
+    },
+    "splitPayment": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "tipoUtente": {
+      "type": "enumeration",
+      "enum": [
+        "Privato",
+        "Azienda",
+        "Agenzia",
+        "Pubblica Amministrazione"
+      ]
+    }
+  }
+}

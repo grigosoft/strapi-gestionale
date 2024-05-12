@@ -1,0 +1,68 @@
+{
+  "kind": "collectionType",
+  "collectionName": "preventivi",
+  "info": {
+    "singularName": "preventivo",
+    "pluralName": "preventivi",
+    "displayName": "Preventivo",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "giorniProduzioneForzato": {
+      "type": "integer",
+      "min": 0
+    },
+    "dati": {
+      "type": "component",
+      "repeatable": false,
+      "component": "documento.documento",
+      "required": true
+    },
+    "linee": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::preventivo-linea.preventivo-linea",
+      "mappedBy": "preventivo"
+    },
+    "dataSpedizione": {
+      "type": "date"
+    },
+    "dataLimiteConferma": {
+      "type": "datetime"
+    },
+    "preventivoSuccessivo": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::preventivo.preventivo",
+      "inversedBy": "preventivoPrecedente"
+    },
+    "preventivoPrecedente": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::preventivo.preventivo",
+      "inversedBy": "preventivoSuccessivo"
+    },
+    "utente": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::utente.utente",
+      "inversedBy": "preventivi"
+    },
+    "documentiTrasporto": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::documento-trasporto.documento-trasporto",
+      "mappedBy": "preventivo"
+    },
+    "ordineCliente": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::ordine-cliente.ordine-cliente",
+      "inversedBy": "preventivo"
+    }
+  }
+}

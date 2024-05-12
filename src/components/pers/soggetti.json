@@ -1,0 +1,29 @@
+{
+  "collectionName": "comp_pers_sogg",
+  "info": {
+    "displayName": "soggetti",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "numero": {
+      "type": "integer",
+      "min": 1,
+      "required": true
+    },
+    "files": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "sottotitolo": {
+      "type": "string"
+    }
+  }
+}

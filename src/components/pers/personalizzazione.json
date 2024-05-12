@@ -1,0 +1,46 @@
+{
+  "collectionName": "comp_pers_p",
+  "info": {
+    "displayName": "P_zione",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "titoloLavorazione": {
+      "type": "string",
+      "required": false
+    },
+    "finitura": {
+      "type": "json"
+    },
+    "tessuto_forzato": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::tessuto.tessuto"
+    },
+    "richiesteCliente": {
+      "type": "text"
+    },
+    "soggetti": {
+      "type": "component",
+      "repeatable": true,
+      "component": "pers.soggetti",
+      "required": true,
+      "min": 1
+    },
+    "files": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "noteInterne": {
+      "type": "text"
+    }
+  }
+}

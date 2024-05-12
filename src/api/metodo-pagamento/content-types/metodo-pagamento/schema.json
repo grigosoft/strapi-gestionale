@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "metodi_pagamento",
+  "info": {
+    "singularName": "metodo-pagamento",
+    "pluralName": "metodi-pagamento",
+    "displayName": "MetodoPagamento",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "tipoPagamento": {
+      "type": "enumeration",
+      "enum": [
+        "Bonifico",
+        "RiBa",
+        "Contante",
+        "Assegno",
+        "PayPal",
+        "Amazon"
+      ]
+    },
+    "scadenze": {
+      "type": "component",
+      "repeatable": true,
+      "component": "pagamento.scadenza",
+      "required": true,
+      "min": 1
+    },
+    "spostaScadenzeFerie": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
+    "giorniPosticipoFineMese": {
+      "type": "integer",
+      "required": true,
+      "default": 0,
+      "min": 0,
+      "max": 31
+    },
+    "banche": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::banca.banca",
+      "mappedBy": "metodiPagamento"
+    }
+  }
+}

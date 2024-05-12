@@ -1,0 +1,40 @@
+{
+  "collectionName": "components_utente_contattos",
+  "info": {
+    "displayName": "contatto",
+    "icon": "envelop",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "denominazione": {
+      "type": "string",
+      "required": false
+    },
+    "telefono": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "tipoContatto": {
+      "type": "enumeration",
+      "enum": [
+        "Fatturazione",
+        "Ordini",
+        "Spedizione",
+        "Amministrazione",
+        "Produzione",
+        "Magazzino",
+        "Generico"
+      ],
+      "default": "Generico",
+      "required": true
+    },
+    "cellulare": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 20
+    }
+  }
+}

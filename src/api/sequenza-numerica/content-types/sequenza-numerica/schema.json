@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sequenza_numericas",
+  "info": {
+    "singularName": "sequenza-numerica",
+    "pluralName": "sequenza-numericas",
+    "displayName": "sequenzaNumerica",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string",
+      "required": true,
+      "unique": false
+    },
+    "sequenza": {
+      "type": "integer",
+      "default": 1,
+      "required": true,
+      "min": 1
+    },
+    "riferimento": {
+      "type": "string"
+    },
+    "azienda": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::azienda.azienda",
+      "inversedBy": "sequenzeNumeriche"
+    }
+  }
+}

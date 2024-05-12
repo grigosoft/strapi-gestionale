@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tessuti",
+  "info": {
+    "singularName": "tessuto",
+    "pluralName": "tessuti",
+    "displayName": "Tessuto",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string",
+      "required": true
+    },
+    "grammatura": {
+      "type": "integer"
+    },
+    "altezzaMassima": {
+      "type": "integer"
+    },
+    "descrizione": {
+      "type": "text"
+    },
+    "foto": {
+      "allowedTypes": [
+        "images",
+        "videos"
+      ],
+      "type": "media",
+      "multiple": true
+    },
+    "prodotti": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::prodotto.prodotto",
+      "mappedBy": "tessuti"
+    },
+    "bordature": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::bordatura.bordatura",
+      "mappedBy": "tessuti"
+    }
+  }
+}

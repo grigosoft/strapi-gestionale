@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ive",
+  "info": {
+    "singularName": "iva",
+    "pluralName": "ive",
+    "displayName": "Iva"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "descrizione": {
+      "type": "text"
+    },
+    "valore": {
+      "type": "float",
+      "required": true
+    }
+  }
+}

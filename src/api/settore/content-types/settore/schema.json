@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "settori",
+  "info": {
+    "singularName": "settore",
+    "pluralName": "settori",
+    "displayName": "Settore",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string",
+      "required": true
+    },
+    "dipendenti": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::dipendente.dipendente",
+      "inversedBy": "settori"
+    },
+    "settoreSuccessivo": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::settore.settore",
+      "inversedBy": "settorePrecedente"
+    },
+    "settorePrecedente": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::settore.settore",
+      "inversedBy": "settoreSuccessivo"
+    },
+    "lavorazioni": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::lavorazione.lavorazione",
+      "mappedBy": "settoreCorrente"
+    },
+    "stati": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::stato-settore.stato-settore",
+      "mappedBy": "settore"
+    }
+  }
+}

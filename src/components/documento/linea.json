@@ -1,0 +1,54 @@
+{
+  "collectionName": "components_documento_lineas",
+  "info": {
+    "displayName": "Linea",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "numero": {
+      "type": "integer",
+      "min": 0,
+      "default": 1,
+      "required": false,
+      "max": 10000
+    },
+    "prezzoNettoCad": {
+      "type": "decimal"
+    },
+    "prezzoNettoTot": {
+      "type": "decimal"
+    },
+    "titoloForzato": {
+      "type": "string",
+      "required": false
+    },
+    "descrizione": {
+      "type": "text"
+    },
+    "prezzoNettoTotForzato": {
+      "type": "decimal"
+    },
+    "descrizioneForzata": {
+      "type": "text"
+    },
+    "prodotto": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::prodotto.prodotto"
+    },
+    "taglia": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::taglia.taglia"
+    },
+    "titolo": {
+      "type": "string"
+    },
+    "iva": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::iva.iva"
+    }
+  }
+}

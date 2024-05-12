@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "listini",
+  "info": {
+    "singularName": "listino",
+    "pluralName": "listini",
+    "displayName": "Listino",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string",
+      "required": true,
+      "unique": false
+    },
+    "descrizione": {
+      "type": "text"
+    },
+    "ricarico": {
+      "type": "integer"
+    },
+    "utenti": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::utente.utente",
+      "mappedBy": "listino"
+    }
+  }
+}

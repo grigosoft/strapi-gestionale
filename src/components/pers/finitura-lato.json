@@ -1,0 +1,55 @@
+{
+  "collectionName": "comp_pers_fin",
+  "info": {
+    "displayName": "Finitura",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "bordatura": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::bordatura.bordatura"
+    },
+    "angolo1": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::accessorio.accessorio"
+    },
+    "angolo2": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::accessorio.accessorio"
+    },
+    "lato": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::accessorio.accessorio"
+    },
+    "saltaAccessoriLatoAgliAngoli": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "numeroAccessori": {
+      "required": true,
+      "min": 0,
+      "default": 0,
+      "type": "integer"
+    },
+    "misura": {
+      "type": "decimal",
+      "min": 0
+    },
+    "posizione": {
+      "type": "enumeration",
+      "enum": [
+        "Sinistro",
+        "Destro",
+        "Sopra",
+        "Sotto"
+      ],
+      "required": false
+    }
+  }
+}

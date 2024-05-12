@@ -1,0 +1,62 @@
+{
+  "collectionName": "components_documento_documentos",
+  "info": {
+    "displayName": "Documento",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "numero": {
+      "type": "integer",
+      "min": 1,
+      "required": false
+    },
+    "anno": {
+      "type": "integer",
+      "max": 3000,
+      "min": 2000,
+      "required": true,
+      "default": 2024
+    },
+    "variante": {
+      "type": "integer",
+      "default": 1,
+      "min": 1,
+      "required": true
+    },
+    "prezzoNettoForzato": {
+      "type": "decimal",
+      "min": 0
+    },
+    "note": {
+      "type": "text"
+    },
+    "data": {
+      "type": "date",
+      "required": true
+    },
+    "metodoPagamento": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::metodo-pagamento.metodo-pagamento"
+    },
+    "banca": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::banca.banca"
+    },
+    "scadenze": {
+      "type": "component",
+      "repeatable": true,
+      "min": 1,
+      "required": true,
+      "component": "pagamento.scadenza"
+    },
+    "indirizzoFatturazione": {
+      "type": "text"
+    },
+    "indirizzoSpedizione": {
+      "type": "text"
+    }
+  }
+}
