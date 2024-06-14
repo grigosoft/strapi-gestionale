@@ -1159,6 +1159,44 @@ export interface ApiDocumentoTrasportoLineaDocumentoTrasportoLinea
   };
 }
 
+export interface ApiFileStampaFileStampa extends Schema.CollectionType {
+  collectionName: 'files_stampa';
+  info: {
+    singularName: 'file-stampa';
+    pluralName: 'files-stampa';
+    displayName: 'FileStampa';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    urlFileOriginale: Attribute.String;
+    archiviato: Attribute.Boolean & Attribute.DefaultTo<false>;
+    utente: Attribute.Relation<
+      'api::file-stampa.file-stampa',
+      'manyToOne',
+      'api::utente.utente'
+    >;
+    urlAnteprima: Attribute.String;
+    nomeFileAppenaArrivati: Attribute.String & Attribute.Private;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::file-stampa.file-stampa',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::file-stampa.file-stampa',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiFinituraDefaultFinituraDefault
   extends Schema.CollectionType {
   collectionName: 'finiture_default';
@@ -2005,6 +2043,11 @@ export interface ApiUtenteUtente extends Schema.CollectionType {
     tipoUtente: Attribute.Enumeration<
       ['Privato', 'Azienda', 'Agenzia', 'Pubblica Amministrazione']
     >;
+    fileNonArchiviati: Attribute.Relation<
+      'api::utente.utente',
+      'oneToMany',
+      'api::file-stampa.file-stampa'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -2047,6 +2090,7 @@ declare module '@strapi/types' {
       'api::dipendente.dipendente': ApiDipendenteDipendente;
       'api::documento-trasporto.documento-trasporto': ApiDocumentoTrasportoDocumentoTrasporto;
       'api::documento-trasporto-linea.documento-trasporto-linea': ApiDocumentoTrasportoLineaDocumentoTrasportoLinea;
+      'api::file-stampa.file-stampa': ApiFileStampaFileStampa;
       'api::finitura-default.finitura-default': ApiFinituraDefaultFinituraDefault;
       'api::iva.iva': ApiIvaIva;
       'api::lavorazione.lavorazione': ApiLavorazioneLavorazione;

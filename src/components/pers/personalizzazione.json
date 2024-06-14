@@ -28,19 +28,13 @@
       "required": true,
       "min": 1
     },
-    "files": {
-      "type": "media",
-      "multiple": true,
-      "required": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
     "noteInterne": {
       "type": "text"
+    },
+    "files": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::file-stampa.file-stampa"
     }
   }
 }

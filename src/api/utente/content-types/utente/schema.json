@@ -176,6 +176,12 @@
         "Agenzia",
         "Pubblica Amministrazione"
       ]
+    },
+    "fileNonArchiviati": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::file-stampa.file-stampa",
+      "mappedBy": "utente"
     }
   }
 }

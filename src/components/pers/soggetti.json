@@ -11,19 +11,13 @@
       "min": 1,
       "required": true
     },
-    "files": {
-      "type": "media",
-      "multiple": true,
-      "required": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
     "sottotitolo": {
       "type": "string"
+    },
+    "files": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::file-stampa.file-stampa"
     }
   }
 }

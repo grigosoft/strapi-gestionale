@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "files_stampa",
+  "info": {
+    "singularName": "file-stampa",
+    "pluralName": "files-stampa",
+    "displayName": "FileStampa",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "urlFileOriginale": {
+      "type": "string"
+    },
+    "archiviato": {
+      "type": "boolean",
+      "default": false
+    },
+    "utente": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::utente.utente",
+      "inversedBy": "fileNonArchiviati"
+    },
+    "urlAnteprima": {
+      "type": "string"
+    },
+    "nomeFileAppenaArrivati": {
+      "type": "string",
+      "private": true
+    }
+  }
+}

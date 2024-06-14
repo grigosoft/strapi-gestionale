@@ -5,7 +5,18 @@
  */
 
 const { createCoreService } = require('@strapi/strapi').factories;
+// const {fomattaIndirizzoFatturazione} = require('..../utils/formattazione');
 
+function formattaIndirizzoFatturazione(utente) {
+    let indirizzo = utente.indirizzoFatturazione;
+    if(indirizzo)
+        return `${utente.denominazione}\n${indirizzo.via}\n${indirizzo.cap} ${indirizzo.citta} (${indirizzo.provincia})\n${indirizzo.stato}\np.iva: ${utente.partitaIva}\ncf: ${utente.codiceFiscale}`
+    else
+        return `${utente.denominazione}\n\nCompleta i dati di Fatturazione`
+}
+function formattaIndirizzoSpedizione(indirizzo) {
+    `${indirizzo.denominazione}\n${indirizzo.via}\n${indirizzo.cap} ${indirizzo.citta} (${indirizzo.provincia})\n${indirizzo.stato}`
+}
 module.exports = createCoreService('api::preventivo.preventivo',
     ({strapi})=>({
         async inizializza(utente) {
@@ -24,13 +35,11 @@ module.exports = createCoreService('api::preventivo.preventivo',
                 resultUtente = resultUtente[0];
                 response["utente"] = resultUtente.id;
                 response["banca"] = resultUtente.id;
-                let indirizzo = resultUtente.indirizzoFatturazione;
-                if(indirizzo)
-                    response["indirizzoFatturazione"] = `${resultUtente.denominazione}\n${indirizzo.via}\n${indirizzo.cap} ${indirizzo.citta} (${indirizzo.provincia})\n${indirizzo.stato}\np.iva: ${resultUtente.partitaIva}\ncf: ${resultUtente.codiceFiscale}`;
-                indirizzo = resultUtente.indirizzoSpedizione;
+                response["indirizzoFatturazione"] = formattaIndirizzoFatturazione(resultUtente);
+                let indirizzo = resultUtente.indirizzoSpedizione;
                 if(indirizzo && indirizzo.length>0){
                     indirizzo = indirizzo[0]; // FIXME inserire indirizzo spedizione preferito
-                    response["indirizzoSpedizione"] = `${indirizzo.denominazione}\n${indirizzo.via}\n${indirizzo.cap} ${indirizzo.citta} (${indirizzo.provincia})\n${indirizzo.stato}`;
+                    response["indirizzoSpedizione"] = formattaIndirizzoSpedizione(indirizzo);
                 }
                 if(resultUtente.metodoPagamento){
                     response["metodoPagamento"] = resultUtente.metodoPagamento.id;

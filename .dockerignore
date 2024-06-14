@@ -7,3 +7,5 @@ node_modules/
 data/
 backup/
 grigoprint.tar
+private/
+public/

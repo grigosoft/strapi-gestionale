@@ -208,8 +208,12 @@ export interface PersPersonalizzazione extends Schema.Component {
         },
         number
       >;
-    files: Attribute.Media;
     noteInterne: Attribute.Text;
+    files: Attribute.Relation<
+      'pers.personalizzazione',
+      'oneToMany',
+      'api::file-stampa.file-stampa'
+    >;
   };
 }
 
@@ -228,8 +232,12 @@ export interface PersSoggetti extends Schema.Component {
         },
         number
       >;
-    files: Attribute.Media;
     sottotitolo: Attribute.String;
+    files: Attribute.Relation<
+      'pers.soggetti',
+      'oneToMany',
+      'api::file-stampa.file-stampa'
+    >;
   };
 }
 

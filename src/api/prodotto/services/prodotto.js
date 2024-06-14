@@ -1,9 +1,11 @@
 'use strict';
 
-const { SVG, registerWindow } = require('@svgdotjs/svg.js');
+// const { SVG, registerWindow } = require('@svgdotjs/svg.js');
 // const { createSVGWindow } = require('svgdom');
+// import { createSVGWindow } from 'svgdom'
 // FIXME https://github.com/svgdotjs/svgdom/issues/121
-
+// import Snap from 'snapsvg';
+// const {} = require('snapsvg')
 /**
  * prodotto service
  */
@@ -20,20 +22,32 @@ module.exports = createCoreService('api::prodotto.prodotto', ({ strapi }) =>  ({
      */
     async anteprimaFiniture(misura, finiture) {
 
-        // returns a window with a document and an svg root node
-        const window = createSVGWindow()
-        const document = window.document
+        var s = Snap("#svg")
+        var bigCircle = s.circle(150, 150, 100);
+        // By default its black, lets change its attributes
+        bigCircle.attr({
+            fill: "#bada55",
+            stroke: "#000",
+            strokeWidth: 5
+        });
+        // Now lets create another small circle:
+        var smallCircle = s.circle(100, 150, 70);
+        return s.svg
 
-        // register window and document
-        registerWindow(window, document)
+        // // returns a window with a document and an svg root node
+        // const window = createSVGWindow()
+        // const document = window.document
 
-        // create canvas
-        const canvas = SVG(document.documentElement)
+        // // register window and document
+        // registerWindow(window, document)
 
-        // use svg.js as normal
-        canvas.rect(100, 100).fill('yellow').move(50,50)
+        // // create canvas
+        // const canvas = SVG(document.documentElement)
 
-        return canvas.svg();
+        // // use svg.js as normal
+        // canvas.rect(100, 100).fill('yellow').move(50,50)
+
+        // return canvas.svg();
     },
   
   }));
