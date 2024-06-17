@@ -21,25 +21,27 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
   async create(ctx) {
     let files = ctx.request.files;
     let props = Object.keys(files)
+    //console.log(files)
+
     // decodifico parametri
-    // console.log(ctx.request.body)
+    //console.log("req: " + ctx.request.body)
     let data = ctx.request.body.data
-    // console.log(data)
+    //console.log(data)
     if(typeof data === "string")
         console.log("json da convertire")
         data = JSON.parse(data)
-    // assicurarsi che sia un file solo
-    if( props && props.length!=1){
-        // errore, 
-        ctx.body = "assicurarsi di caricare 1 file"
-        return
+    
+    let res = await strapi.service('api::file-stampa.file-stampa').check_create(data, files);
+
+    // se c'è un errore lo metto nel body
+    if(res != null)
+    {
+        ctx.body = res;
+        return;
     }
+    
     // assicurarsi che sia assegnato ad un utente
-    if(!("utente" in data)){
-        // errore, 
-        ctx.body = "assicurarsi di assegnare un utente"
-        return
-    }
+    
         
     let file = files[props[0]]
      // verificare se è nella cartella appena arrivati e spostarlo e basta ( mettere un parmetro da passare? )
