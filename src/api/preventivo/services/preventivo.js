@@ -5,18 +5,8 @@
  */
 
 const { createCoreService } = require('@strapi/strapi').factories;
-// const {fomattaIndirizzoFatturazione} = require('..../utils/formattazione');
+const {formattaIndirizzoFatturazione, formattaIndirizzoSpedizione} = require('../../../utils/formattazione');
 
-function formattaIndirizzoFatturazione(utente) {
-    let indirizzo = utente.indirizzoFatturazione;
-    if(indirizzo)
-        return `${utente.denominazione}\n${indirizzo.via}\n${indirizzo.cap} ${indirizzo.citta} (${indirizzo.provincia})\n${indirizzo.stato}\np.iva: ${utente.partitaIva}\ncf: ${utente.codiceFiscale}`
-    else
-        return `${utente.denominazione}\n\nCompleta i dati di Fatturazione`
-}
-function formattaIndirizzoSpedizione(indirizzo) {
-    `${indirizzo.denominazione}\n${indirizzo.via}\n${indirizzo.cap} ${indirizzo.citta} (${indirizzo.provincia})\n${indirizzo.stato}`
-}
 module.exports = createCoreService('api::preventivo.preventivo',
     ({strapi})=>({
         async inizializza(utente) {

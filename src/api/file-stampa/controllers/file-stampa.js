@@ -26,6 +26,7 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
     let data = ctx.request.body.data
     // console.log(data)
     if(typeof data === "string")
+        console.log("json da convertire")
         data = JSON.parse(data)
     // assicurarsi che sia un file solo
     if( props && props.length!=1){
@@ -61,7 +62,7 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
         console.log("sposto il file")
         await copyFile(file.path, destinazione_file)
         console.log("elimino il file temporaneo")
-        // await unlink(file.path)
+        // await unlink(file.path) // lo cancella prima che finisca la copy!
         // file written successfully
         // aggiorno parametro "urlFileOriginale"
         
@@ -74,7 +75,7 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
         //
         console.log("salvo a DB")
         let response = await super.create(ctx);
-        await unlink(file.path)
+        await unlink(file.path) // messo alla fine altrimenti elimina il file prima che la copy finisca????
         // console.log(response)
         return response
       } catch (err) {

@@ -15,6 +15,7 @@ module.exports = createCoreController("api::preventivo.preventivo",
   async inizializza(ctx) {
     // @ts-ignore
     const params = ctx.request.params;
+    // console.log(ctx.request);
     console.log(params);
     
     const result = await strapi
