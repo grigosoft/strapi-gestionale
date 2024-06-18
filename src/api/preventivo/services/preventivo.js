@@ -36,13 +36,16 @@ module.exports = createCoreService('api::preventivo.preventivo',
                     response["scadenze"] = resultUtente.metodoPagamento.scadenze;
                 }
             }
-            response["data"] = data.getDate();
+            response["data"] = data.toISOString().substring(0,10);
             response["anno"] = anno;
             response["numero"] = await strapi
                 .service('api::sequenza-numerica.sequenza-numerica')
                 .anteprima("preventivi", anno);
             // console.log(response);
-            return response;
+            let strutturaCorretta = {}
+            strutturaCorretta["data"] = {}
+            strutturaCorretta["data"]["dati"] = response
+            return strutturaCorretta;
         },
         async create(params) {
             // applico anno e sequenza

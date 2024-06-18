@@ -2048,6 +2048,10 @@ export interface ApiUtenteUtente extends Schema.CollectionType {
       'oneToMany',
       'api::file-stampa.file-stampa'
     >;
+    nomeCartella: Attribute.String &
+      Attribute.SetMinMaxLength<{
+        maxLength: 15;
+      }>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

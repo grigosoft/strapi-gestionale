@@ -182,6 +182,11 @@
       "relation": "oneToMany",
       "target": "api::file-stampa.file-stampa",
       "mappedBy": "utente"
+    },
+    "nomeCartella": {
+      "type": "string",
+      "maxLength": 15,
+      "unique": false
     }
   }
 }

@@ -12,6 +12,12 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
 
         //preventivo-strapi.service('api::utente.utente').find({filters:{id:utente}
         // controllo se l'utente non è null e copio altro -> guardare nel database se esiste quell'utente (ID)
+        /**
+         * 
+         * @param {*} data 
+         * @param {*} files 
+         * @returns 
+         */
         async check_create(data, files)
         {
             if(!data){
@@ -51,9 +57,44 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
                     return "l'utente non esiste";
                 }
             }
-        }
+        },
+        /**
+         * sposto dalla cartella temporanea: private/idUtente/
+         * all'archivio: private/archivio/(1°lettera)/nomeCartella(dell'utente)/anno/P+numero
+         * 
+         * aggiorno a DB il path del file
+         * 
+         * @param {*} idFile 
+         * @param {*} idPreventivo 
+         */
+        async spostaInArchivioPreventivo(idFile, idPreventivo){
 
-        
+        },
+        /**
+         * sposto dalla cartella temporanea: private/idUtente/
+         * all'archivio: private/archivio/(1°lettera)/nomeCartella(dell'utente)/anno/numero
+         * 
+         * aggiorno a DB il path del file
+         * 
+         * @param {*} idFile 
+         * @param {*} idOrdine 
+         */
+        async spostaInArchivioOrdine(idFile, idOrdine){
+
+        }
+        ,
+        /**
+         * rinomino la cartella con P davanti a solo numero: 
+         * private/archivio/(1°lettera)/nomeCartella(dell'utente)/anno/numero
+         * 
+         * aggiornando a DB tutti i path dei file collegati
+         * 
+         * @param {*} idPreventivo 
+         * @param {*} idOrdine 
+         */
+        async spostaDaPreventivoAOrdine(idPreventivo, idOrdine){
+
+        }
 
         //
 

@@ -19,12 +19,14 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
      * 
      * */
   async create(ctx) {
+    // @ts-ignore
     let files = ctx.request.files;
     let props = Object.keys(files)
     //console.log(files)
 
     // decodifico parametri
     //console.log("req: " + ctx.request.body)
+    // @ts-ignore
     let data = ctx.request.body.data
     //console.log(data)
     if(typeof data === "string")
@@ -36,8 +38,12 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
     // se c'è un errore lo metto nel body
     if(res != null)
     {
-        ctx.body = res;
-        return;
+        ctx.throw(400, {
+            message: res,
+            name: "ValidationError"
+          });
+        // ctx.body = res;
+        return ctx;
     }
     
     // assicurarsi che sia assegnato ad un utente
@@ -69,10 +75,11 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
         // aggiorno parametro "urlFileOriginale"
         
         data["urlFileOriginale"] = destinazione_file
-        console.log(ctx.request.body)
+        // console.log(ctx.request.body)
+        // @ts-ignore
         ctx.request.body.data = JSON.stringify(data)
-        console.log(ctx.request.body)
-        console.log(ctx.request.body.data)
+        // console.log(ctx.request.body)
+        // console.log(ctx.request.body.data)
         // creare l'anteprima
         //
         console.log("salvo a DB")
