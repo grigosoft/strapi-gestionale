@@ -17,7 +17,7 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
 ({strapi})=>({
     /**
      * 
-     * */
+     **/
   async create(ctx) {
     // @ts-ignore
     let files = ctx.request.files;

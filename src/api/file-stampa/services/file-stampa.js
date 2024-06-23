@@ -5,6 +5,9 @@
  */
 
 const { createCoreService } = require('@strapi/strapi').factories;
+const { mkdir,copyFile, unlink, readdir , cp} = require('fs/promises');
+
+const {cpSync} = require('fs');
 
 module.exports = createCoreService('api::file-stampa.file-stampa', 
     ({strapi}) =>({
@@ -59,19 +62,51 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
             }
         },
         /**
-         * sposto dalla cartella temporanea: private/idUtente/
+         * sposto dalla cartella temporanea: private/upload/idUtente/
          * all'archivio: private/archivio/(1°lettera)/nomeCartella(dell'utente)/anno/P+numero
          * 
          * aggiorno a DB il path del file
          * 
-         * @param {*} idFile 
-         * @param {*} idPreventivo 
+         * @param {*} idFile // id del file da spostare
+         * @param {*} idPreventivo //
          */
         async spostaInArchivioPreventivo(idFile, idPreventivo){
+        // vado nella cartella temporanea
+        let resultUtente = await strapi.service('api::file-stampa.file-stampa').findOne(idFile);
+        let src = resultUtente.path;
+
+        console.log(src);
+            
+        // controllo se esiste il file
+        if(!resultUtente)
+            return "il file non esiste";
+        else{
+            // controllo se è già stato spostato
+            if(resultUtente.archiviato == 0){
+                console.log("il file deve essere spostato")
+                // sposto il file
+
+                await cpSync(src, dest, {recursive: true});
+
+                // aggiorno il path nel DB
+            }
+            else{
+                console.log("il file è già stato spostato")
+            }
+        }
+        // sposto i files
+        // aggiorno il path nel DB
+            
 
         },
+        
+        
+        
+        
+        
+        
         /**
-         * sposto dalla cartella temporanea: private/idUtente/
+         * sposto dalla cartella temporanea: private/upload/idUtente/
          * all'archivio: private/archivio/(1°lettera)/nomeCartella(dell'utente)/anno/numero
          * 
          * aggiorno a DB il path del file
