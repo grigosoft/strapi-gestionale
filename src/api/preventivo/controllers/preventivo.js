@@ -34,7 +34,8 @@ module.exports = createCoreController("api::preventivo.preventivo",
     let response = await super.create(ctx);
     // spostamento del file ->
 
-    strapi.service('api::file-stampa.file-stampa').spostaInArchivioPreventivo(4, 4);
+    // lo spsotamento va fatto su preventivo linea
+    // TODO strapi.service('api::file-stampa.file-stampa').spostaInArchivioPreventivo(4, 4);
 
 
     return response;

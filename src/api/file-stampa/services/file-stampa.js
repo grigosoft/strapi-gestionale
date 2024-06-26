@@ -36,8 +36,8 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
                 return "assicurarsi di caricare 1 file"
             }
         
-            console.log("INIZIO DELLA FUNZIONE");
-            console.log(data);
+            // console.log("INIZIO DELLA FUNZIONE");
+            // console.log(data);
             if(!("utente" in data)){
                 // errore dell'id utente 
                 return "assicurarsi di assegnare un utente";
@@ -49,7 +49,7 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
                 //diviso in due istruzioni per colpa dell' await(?)
                 resultUtente = resultUtente.results;
 
-                console.log(resultUtente);
+                // console.log(resultUtente);
 
                 if(resultUtente && resultUtente.length == 1){
                     //console.log(resultUtente);
@@ -75,7 +75,7 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
         let resultUtente = await strapi.service('api::file-stampa.file-stampa').findOne(idFile);
         let src = resultUtente.path;
 
-        console.log(src);
+        // console.log(src);
             
         // controllo se esiste il file
         if(!resultUtente)
@@ -83,7 +83,7 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
         else{
             // controllo se è già stato spostato
             if(resultUtente.archiviato == 0){
-                console.log("il file deve essere spostato")
+                // console.log("il file deve essere spostato")
                 // sposto il file
 
                 await cpSync(src, dest, {recursive: true});
@@ -91,7 +91,7 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
                 // aggiorno il path nel DB
             }
             else{
-                console.log("il file è già stato spostato")
+                // console.log("il file è già stato spostato")
             }
         }
         // sposto i files
