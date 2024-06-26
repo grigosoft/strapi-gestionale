@@ -5,9 +5,9 @@
  */
 
 const { createCoreService } = require('@strapi/strapi').factories;
-const { mkdir,copyFile, unlink, readdir , cp} = require('fs/promises');
+const { mkdir} = require('fs/promises');
 
-const {cpSync} = require('fs');
+const {rename} = require('fs');
 
 module.exports = createCoreService('api::file-stampa.file-stampa', 
     ({strapi}) =>({
@@ -45,11 +45,9 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
             else
             {
                 let id = data.utente;
-                let resultUtente = await strapi.service('api::utente.utente').find({filters:{"ID":id}});
+                let resultUtente = await strapi.service('api::utente.utente').find({filters:{id}});
                 //diviso in due istruzioni per colpa dell' await(?)
                 resultUtente = resultUtente.results;
-
-                console.log(resultUtente);
 
                 if(resultUtente && resultUtente.length == 1){
                     //console.log(resultUtente);
@@ -67,43 +65,63 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
          * 
          * aggiorno a DB il path del file
          * 
-         * @param {*} idFile // id del file da spostare
-         * @param {*} idPreventivo //
+         * @param {*} idFile 
+         * @param {*} idPreventivo 
+         * 
+         * 
          */
         async spostaInArchivioPreventivo(idFile, idPreventivo){
-        // vado nella cartella temporanea
-        let resultUtente = await strapi.service('api::file-stampa.file-stampa').findOne(idFile);
-        let src = resultUtente.path;
-
-        console.log(src);
+            // prendo il file
+            let resultFile = await strapi.service('api::file-stampa.file-stampa').findOne(idFile, {"populate": { "utente": true}});
+            // prendo il preventivo 
+            let resultPreventivo = await strapi.service('api::preventivo.preventivo').findOne(idPreventivo, {"populate": { "dati": true}});
             
-        // controllo se esiste il file
-        if(!resultUtente)
-            return "il file non esiste";
-        else{
-            // controllo se è già stato spostato
-            if(resultUtente.archiviato == 0){
-                console.log("il file deve essere spostato")
-                // sposto il file
 
-                await cpSync(src, dest, {recursive: true});
+            let anno = resultPreventivo.dati.anno
+            
+            let src = resultFile.urlFileOriginale;
 
-                // aggiorno il path nel DB
-            }
+            /*
+
+                console.log("File da spostare:");
+                console.log(resultFile);
+            
+                console.log("\n\nPreventivo da spostare:");
+                console.log(resultPreventivo);
+            */
+
+            let dest = "";
+            let nome = resultFile.utente.denominazione;
+
+            // controllo se esiste il file
+            if(!resultFile)
+                return "il file non esiste";
             else{
-                console.log("il file è già stato spostato")
+                // controllo se è già stato spostato
+                if(resultFile.archiviato == 0){
+                    console.log("il file deve essere spostato")
+                    // sposto il file
+                    console.log("Prima: " + src);
+                    dest = toPathPreventivo(nome, anno, resultPreventivo.id);
+                    //il path è: private/archivio/S/CLIENT/2024/P_11 , ma non mi crea la cartella, perché?
+                    console.log("Destinazione: " + dest);
+                    await mkdir(dest, {recursive:true});
+                    dest += "/" + src.split("/")[src.split("/").length - 1];
+                    console.log("Dopo: " + dest);
+                    // @ts-ignore
+                    await rename(src, dest, (err) => {
+                        if (err) throw err;
+                    });
+                    // aggiorno il path nel DB
+                    // aggiorno il path nel DB e imposto la variabile archiviato a 1, perchè e stato archiviato
+                    strapi.service('api::file-stampa.file-stampa').update(idFile, {data:{"urlFileOriginale": dest, "archiviato": 1}});
+                    return null;
+                }
+                else{
+                    return "il file è già stato spostato";
+                }
             }
-        }
-        // sposto i files
-        // aggiorno il path nel DB
-            
-
         },
-        
-        
-        
-        
-        
         
         /**
          * sposto dalla cartella temporanea: private/upload/idUtente/
@@ -115,6 +133,53 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
          * @param {*} idOrdine 
          */
         async spostaInArchivioOrdine(idFile, idOrdine){
+            // prendo il file
+            let resultFile = await strapi.service('api::file-stampa.file-stampa').findOne(idFile, {"populate": { "utente": true}});
+            // prendo il preventivo 
+            let resultOrdine = await strapi.service('api::ordine-cliente.ordine-cliente').findOne(idOrdine, {"populate": { "dati": true}});
+            
+            let anno = resultOrdine.dati.anno
+            
+            let src = resultFile.urlFileOriginale;
+
+            /*
+
+                console.log("File da spostare:");
+                console.log(resultFile);
+            
+                console.log("\n\nPreventivo da spostare:");
+                console.log(resultPreventivo);
+            */
+
+            let dest = "";
+            let nome = resultFile.utente.denominazione;
+
+            // controllo se esiste il file
+            if(!resultFile)
+                return "il file non esiste";
+            else{
+                // controllo se è già stato spostato
+                if(resultFile.archiviato == 0){
+                    console.log("il file deve essere spostato")
+                    dest = toPathOrdine(nome, anno, resultOrdine.id);
+                    console.log("Destinazione: " + dest);
+                    await mkdir(dest, {recursive:true});
+                    dest += "/" + src.split("/")[src.split("/").length - 1];
+                    console.log("Dopo: " + dest);
+                    // sposto il file
+                    await rename(src, dest, (err) => {
+                        if (err) throw err;
+                    });
+
+                    // aggiorno il path nel DB
+                    // aggiorno il path nel DB e imposto la variabile archiviato a 1, perchè e stato archiviato
+                    strapi.service('api::file-stampa.file-stampa').update(idFile, {data:{"urlFileOriginale": dest, "archiviato": 1}});
+                    return null;
+                }
+                else{
+                    return "il file è già stato spostato";
+                }
+            }
 
         }
         ,
@@ -128,7 +193,28 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
          * @param {*} idOrdine 
          */
         async spostaDaPreventivoAOrdine(idPreventivo, idOrdine){
+            // prendo il preventivo
+            let resultPreventivo = await strapi.service('api::preventivo.preventivo').findOne(idPreventivo, {"populate": { "dati": true, "utente": true}});
 
+            
+            // prendo l'ordine
+            let resultOrdine = await strapi.service('api::ordine-cliente.ordine-cliente').findOne(idOrdine, {"populate": { "dati": true, "utente": true}});
+            
+            console.log("Ordine: ");
+            console.log(resultOrdine);
+
+            let scr_preventivo = toPathPreventivo(resultPreventivo.utente.denominazione, resultPreventivo.dati.anno, resultPreventivo.id);
+            let dest_ordine = toPathOrdine(resultOrdine.utente.denominazione, resultOrdine.dati.anno, resultOrdine.id);
+
+            console.log("Preventivo: " + scr_preventivo); //Preventivo: /Users/benini/GIT/strapi-gestionale/private/archivio/S/SUPERCLIENTERIC/2024/P_75
+
+            console.log("Ordine: " + dest_ordine);        //Ordine: /Users/benini/GIT/strapi-gestionale/private/archivio/S/SUPERCLIENTERIC/2024/3
+
+            rename(scr_preventivo, dest_ordine, (err) => {
+                if (err) throw err;
+
+            });
+            
         }
 
         //
@@ -137,5 +223,92 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
     })
 );
 
+// Metodo che restituisce il path in cui verrà salvato il file, dando come parametri il nome del cliente, l'anno e il numero del preventivo 
+function toPathPreventivo(nome, anno, preventivo)
+{
+    let path = "private/archivio/";
+    
+    if(typeof(nome) == "string"){
+        // ^ all'interno della parentesi quadra indica, insieme al resto, che voglio cercare tutto ciò che non è una lettera o un numero
+        nome = nome.replace(/[^a-zA-Z0-9àèìòùÀÈÌÒÙ]/g, "");
+        
+        if(nome.length > 15)
+        {
+            nome = nome.substring(0, 15);
+        }
+    }
+    else{
+        return "il nome deve essere una stringa";
+    }
 
+    let lettera = nome.charAt(0).toUpperCase();
 
+    path += lettera + "/" + nome + "/";
+
+    if(typeof(anno) == "number"){
+        anno = anno.toString();
+    }
+    else{
+        return "l'anno deve essere un numero o una stringa";
+    }
+
+    path += anno + "/";
+
+    if(typeof(preventivo) == "number" || typeof(preventivo) == "string"){
+        preventivo = preventivo.toString();
+    }
+    else{
+        return "l'ordine deve essere un numero o una stringa";
+    }
+
+    path += "P_" + preventivo ;
+    
+    path = process.cwd() + "/" +  path;
+
+    return path;
+}
+
+// Metodo che restituisce il path in cui verrà salvato il file, dando come parametri il nome del cliente, l'anno e il numero dell'ordine
+function toPathOrdine(nome, anno, ordine)
+{
+    let path = "private/archivio/";
+    
+    if(typeof(nome) == "string"){
+        // ^ all'interno della parentesi quadra indica, insieme al resto, che voglio cercare tutto ciò che non è una lettera o un numero
+        nome = nome.replace(/[^a-zA-Z0-9àèìòùÀÈÌÒÙ]/g, "");
+        
+        if(nome.length > 15)
+        {
+            nome = nome.substring(0, 15);
+        }
+    }
+    else{
+        return "il nome deve essere una stringa";
+    }
+
+    let lettera = nome.charAt(0).toUpperCase();
+
+    path += lettera + "/" + nome + "/";
+
+    if(typeof(anno) == "number"){
+        anno = anno.toString();
+    }
+    else{
+        return "l'anno deve essere un numero o una stringa";
+    }
+
+    path += anno + "/";
+
+    if(typeof(ordine) == "number" || typeof(ordine) == "string"){
+        ordine = ordine.toString();
+    }
+    else{
+        return "l'ordine deve essere un numero o una stringa";
+    }
+
+    path += ordine ;
+    
+    path = process.cwd() + "/" +  path;
+
+    return path;
+}
