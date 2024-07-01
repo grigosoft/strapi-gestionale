@@ -36,8 +36,8 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
                 return "assicurarsi di caricare 1 file"
             }
         
-            console.log("INIZIO DELLA FUNZIONE");
-            console.log(data);
+            // console.log("INIZIO DELLA FUNZIONE");
+            // console.log(data);
             if(!("utente" in data)){
                 // errore dell'id utente 
                 return "assicurarsi di assegnare un utente";
