@@ -62,6 +62,11 @@ export interface DocumentoDocumento extends Schema.Component {
       >;
     indirizzoFatturazione: Attribute.Text;
     indirizzoSpedizione: Attribute.Text;
+    rappresentante: Attribute.Relation<
+      'documento.documento',
+      'oneToOne',
+      'api::dipendente.dipendente'
+    >;
   };
 }
 
