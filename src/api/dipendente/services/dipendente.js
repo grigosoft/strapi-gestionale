@@ -13,8 +13,12 @@ module.exports = createCoreService('api::dipendente.dipendente',
      * @param {*} userId id dell'user da controllare se è un dipendente
      */
     async getDipendente(userId) {
-        let resultUtente = await strapi.service('api::user.user')
-                .findOne(userId,{populate:["dipendente"]});
+        let resultUtente = await strapi.entityService.findOne('plugin::users-permissions.user', userId, {
+            populate: ["dipendente"],
+          });
+        
+        // strapi.service('plugin::users-permissions.user')
+        //         .findOne(userId);//{"populate":["dipendente"]}
         console.log(resultUtente)
         if (resultUtente != null)
             return resultUtente.dipendente
