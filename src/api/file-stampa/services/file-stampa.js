@@ -5,9 +5,8 @@
  */
 
 const { createCoreService } = require('@strapi/strapi').factories;
-const { mkdir} = require('fs/promises');
+const { mkdir, rename} = require('fs/promises');
 
-const {rename} = require('fs');
 
 module.exports = createCoreService('api::file-stampa.file-stampa', 
     ({strapi}) =>({
@@ -73,9 +72,17 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
         async spostaInArchivioPreventivo(idFile, idPreventivo){
             // prendo il file
             let resultFile = await strapi.service('api::file-stampa.file-stampa').findOne(idFile, {"populate": { "utente": true}});
+            
+            console.log("File da spostare:");
+            console.log(resultFile);
+            
             // prendo il preventivo 
+            console.log("idPreventivo: " + idPreventivo);
             let resultPreventivo = await strapi.service('api::preventivo.preventivo').findOne(idPreventivo, {"populate": { "dati": true}});
             
+
+            console.log("\n\nPreventivo da spostare:");
+            console.log(resultPreventivo);
 
             let anno = resultPreventivo.dati.anno
             
@@ -135,6 +142,7 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
         async spostaInArchivioOrdine(idFile, idOrdine){
             // prendo il file
             let resultFile = await strapi.service('api::file-stampa.file-stampa').findOne(idFile, {"populate": { "utente": true}});
+            
             // prendo il preventivo 
             let resultOrdine = await strapi.service('api::ordine-cliente.ordine-cliente').findOne(idOrdine, {"populate": { "dati": true}});
             
@@ -167,9 +175,7 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
                     dest += "/" + src.split("/")[src.split("/").length - 1];
                     console.log("Dopo: " + dest);
                     // sposto il file
-                    await rename(src, dest, (err) => {
-                        if (err) throw err;
-                    });
+                    await rename(src, dest)
 
                     // aggiorno il path nel DB
                     // aggiorno il path nel DB e imposto la variabile archiviato a 1, perchè e stato archiviato
@@ -210,10 +216,7 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
 
             console.log("Ordine: " + dest_ordine);        //Ordine: /Users/benini/GIT/strapi-gestionale/private/archivio/S/SUPERCLIENTERIC/2024/3
 
-            rename(scr_preventivo, dest_ordine, (err) => {
-                if (err) throw err;
-
-            });
+            await rename(scr_preventivo, dest_ordine);
             
         }
 

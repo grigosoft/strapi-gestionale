@@ -18,7 +18,7 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
     /**
      * 
      **/
-  async create(ctx) {
+  async create_2(ctx) {
     // @ts-ignore
     let files = ctx.request.files;
     let props = Object.keys(files)
@@ -58,15 +58,19 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
     // console.log(ctx.request.files)
     // console.log(file)
     
-    
-
     try {
+        let id_file = await strapi.service("api::sequenza-numerica.sequenza-numerica").preleva("file-stampa",  null )
+        
         let destinazione_cartella = join(DESTINAZIONE_UPLOAD, data.utente.toString())
         let destinazione_file = join(destinazione_cartella, file.name)
+        console.log(destinazione_file)
         // creo le cartelle 
         console.log("creo le cartelle")
         await mkdir(destinazione_cartella,{recursive:true})
         // sposto il file 
+
+        
+        
         console.log("sposto il file")
         await copyFile(file.path, destinazione_file)
         console.log("elimino il file temporaneo")
@@ -77,15 +81,23 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
         data["urlFileOriginale"] = destinazione_file
         // console.log(ctx.request.body)
         // @ts-ignore
+        
         ctx.request.body.data = JSON.stringify(data)
         // console.log(ctx.request.body)
-        // console.log(ctx.request.body.data)
         // creare l'anteprima
         //
+
+
         console.log("salvo a DB")
+        
         let response = await super.create(ctx);
+
+        // TODO: fare sequenza che azzera il contatore ogni volta che si crea un prevento e 
+        // controlla se la cartella è vuota, altrimenti niente
+        
         await unlink(file.path) // messo alla fine altrimenti elimina il file prima che la copy finisca????
         // console.log(response)
+        console.log("fine")
         return response
       } catch (err) {
         console.error(err);
@@ -103,3 +115,5 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
         }
     }
 }));
+
+

@@ -18,14 +18,14 @@ module.exports = createCoreService('api::sequenza-numerica.sequenza-numerica', (
      */
     async preleva(nome, riferimento, aggiornaDb=true) {
         const params = {"filters":{"nome":nome}};
-        if (riferimento) {
+        if (riferimento != null) {
             params["filters"]["riferimento"]=riferimento;
         }
         const results = await strapi.entityService.findMany('api::sequenza-numerica.sequenza-numerica', this.getFetchParams(params));
         // console.log("params:", params);
         // console.log("results:", results);
         let result;
-        if(results && results.length==1){
+        if(results != null && results.length==1){
             result = results[0];
             if (aggiornaDb) {
                 // incremento il contatore a database
@@ -37,7 +37,7 @@ module.exports = createCoreService('api::sequenza-numerica.sequenza-numerica', (
                 });
             }
             result = result.sequenza
-        } else if(results && results.length==0){ // sequenza non presente, ne creo una nuova che parte da 1
+        } else if(results != null && results.length==0){ // sequenza non presente, ne creo una nuova che parte da 1
             if (aggiornaDb) {
                 await strapi.entityService.create('api::sequenza-numerica.sequenza-numerica', {
                     data: {
