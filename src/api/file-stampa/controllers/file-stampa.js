@@ -18,7 +18,7 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
     /**
      * 
      **/
-  async create_2(ctx) {
+  async create(ctx) {
     // @ts-ignore
     let files = ctx.request.files;
     let props = Object.keys(files)
@@ -62,7 +62,7 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
         let id_file = await strapi.service("api::sequenza-numerica.sequenza-numerica").preleva("file-stampa",  null )
         
         let destinazione_cartella = join(DESTINAZIONE_UPLOAD, data.utente.toString())
-        let destinazione_file = join(destinazione_cartella, file.name)
+        let destinazione_file = join(destinazione_cartella, id_file+'-'+file.name)
         console.log(destinazione_file)
         // creo le cartelle 
         console.log("creo le cartelle")
