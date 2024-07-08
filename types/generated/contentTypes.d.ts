@@ -770,7 +770,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    avatar: Attribute.Media;
+    avatar: Attribute.Media<'images'>;
     dipendente: Attribute.Relation<
       'plugin::users-permissions.user',
       'oneToOne',
@@ -811,7 +811,7 @@ export interface ApiAccessorioAccessorio extends Schema.CollectionType {
   };
   attributes: {
     nome: Attribute.String & Attribute.Required;
-    foto: Attribute.Media;
+    foto: Attribute.Media<'images'>;
     bordature: Attribute.Relation<
       'api::accessorio.accessorio',
       'manyToMany',
@@ -857,8 +857,8 @@ export interface ApiAziendaAzienda extends Schema.CollectionType {
         number
       > &
       Attribute.DefaultTo<0>;
-    logo: Attribute.Media;
-    ico: Attribute.Media;
+    logo: Attribute.Media<'images'>;
+    ico: Attribute.Media<'images'>;
     metodoPagamentoPreferito: Attribute.Relation<
       'api::azienda.azienda',
       'oneToOne',
@@ -965,7 +965,7 @@ export interface ApiBordaturaBordatura extends Schema.CollectionType {
   };
   attributes: {
     nome: Attribute.String & Attribute.Required;
-    foto: Attribute.Media;
+    foto: Attribute.Media<'images'>;
     tessuti: Attribute.Relation<
       'api::bordatura.bordatura',
       'manyToMany',
@@ -1636,7 +1636,7 @@ export interface ApiProdottoProdotto extends Schema.CollectionType {
     personalizzabile: Attribute.Boolean &
       Attribute.Required &
       Attribute.DefaultTo<false>;
-    media: Attribute.Media;
+    media: Attribute.Media<'images' | 'files' | 'videos' | 'audios', true>;
     tessuti: Attribute.Relation<
       'api::prodotto.prodotto',
       'manyToMany',
@@ -1903,7 +1903,7 @@ export interface ApiTessutoTessuto extends Schema.CollectionType {
     grammatura: Attribute.Integer;
     altezzaMassima: Attribute.Integer;
     descrizione: Attribute.Text;
-    foto: Attribute.Media;
+    foto: Attribute.Media<'images' | 'videos', true>;
     prodotti: Attribute.Relation<
       'api::tessuto.tessuto',
       'manyToMany',

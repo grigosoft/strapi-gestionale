@@ -20,7 +20,7 @@ module.exports = createCoreController('api::utente.utente',
                     return clienti;
                 }
             }
-            return await super.find();
+            return await super.find(ctx);
         },
         async findOne(ctx, id) {
             if(ctx.state.user != null)

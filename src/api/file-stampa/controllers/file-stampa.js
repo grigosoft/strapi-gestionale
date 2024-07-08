@@ -29,10 +29,10 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
     // @ts-ignore
     let data = ctx.request.body.data
     //console.log(data)
-    if(typeof data === "string")
+    if(typeof data === "string"){
         console.log("json da convertire")
         data = JSON.parse(data)
-    
+    }
     let res = await strapi.service('api::file-stampa.file-stampa').check_create(data, files);
 
     // se c'è un errore lo metto nel body
@@ -65,15 +65,15 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
         let destinazione_file = join(destinazione_cartella, id_file+'-'+file.name)
         console.log(destinazione_file)
         // creo le cartelle 
-        console.log("creo le cartelle")
+        // console.log("creo le cartelle")
         await mkdir(destinazione_cartella,{recursive:true})
         // sposto il file 
 
         
         
-        console.log("sposto il file")
+        // console.log("sposto il file")
         await copyFile(file.path, destinazione_file)
-        console.log("elimino il file temporaneo")
+        // console.log("elimino il file temporaneo")
         // await unlink(file.path) // lo cancella prima che finisca la copy!
         // file written successfully
         // aggiorno parametro "urlFileOriginale"
@@ -88,7 +88,7 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
         //
 
 
-        console.log("salvo a DB")
+        // console.log("salvo a DB")
         
         let response = await super.create(ctx);
 
@@ -97,7 +97,7 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
         
         await unlink(file.path) // messo alla fine altrimenti elimina il file prima che la copy finisca????
         // console.log(response)
-        console.log("fine")
+        // console.log("fine")
         return response
       } catch (err) {
         console.error(err);
