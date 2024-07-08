@@ -34,9 +34,12 @@ module.exports = createCoreController('api::utente.utente',
                     if(!clienti.find(cliente => cliente.id === id)){
                         return ctx.badRequest("richiesto un cliente non associato al rappresentante richiedente");
                     }
-                return await super.findOne(ctx, id);
                 }   
             }
+            //richiamo la findOne di default se
+            // a richiedere non è un utente ( autenticato tramite token)
+            // a richiedere è un dipendente NON RAPPRESENTANTE
+            return await super.findOne(ctx, id);
         }
     })
 
