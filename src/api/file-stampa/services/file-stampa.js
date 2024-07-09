@@ -83,7 +83,7 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
             let resultPreventivo = await strapi.service('api::preventivo.preventivo').findOne(idPreventivo, {"populate": { "dati": true}});
             
             // controllo se esiste il file
-            if(!resultFile)
+            if(null == resultFile)
                 throw new ApplicationError("il file non esiste");
 
             console.log("\n\nPreventivo da spostare:");
@@ -145,6 +145,10 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
             // prendo il file
             let resultFile = await strapi.service('api::file-stampa.file-stampa').findOne(idFile, {"populate": { "utente": true}});
             
+            // controllo se esiste il file
+            if(null == resultFile)
+                throw new ApplicationError("il file non esiste");
+
             // prendo il preventivo 
             let resultOrdine = await strapi.service('api::ordine-cliente.ordine-cliente').findOne(idOrdine, {"populate": { "dati": true}});
             
@@ -164,30 +168,27 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
             let dest = "";
             let nome = resultFile.utente.denominazione;
 
-            // controllo se esiste il file
-            if(!resultFile)
-                return "il file non esiste";
-            else{
-                // controllo se è già stato spostato
-                if(resultFile.archiviato == 0){
-                    console.log("il file deve essere spostato")
-                    dest = toPathOrdine(nome, anno, resultOrdine.id);
-                    console.log("Destinazione: " + dest);
-                    await mkdir(dest, {recursive:true});
-                    dest += "/" + src.split("/")[src.split("/").length - 1];
-                    console.log("Dopo: " + dest);
-                    // sposto il file
-                    await rename(src, dest)
+            
+            // controllo se è già stato spostato
+            if(resultFile.archiviato == 0){
+                console.log("il file deve essere spostato")
+                dest = toPathOrdine(nome, anno, resultOrdine.id);
+                console.log("Destinazione: " + dest);
+                await mkdir(dest, {recursive:true});
+                dest += "/" + src.split("/")[src.split("/").length - 1];
+                console.log("Dopo: " + dest);
+                // sposto il file
+                await rename(src, dest)
 
-                    // aggiorno il path nel DB
-                    // aggiorno il path nel DB e imposto la variabile archiviato a 1, perchè e stato archiviato
-                    strapi.service('api::file-stampa.file-stampa').update(idFile, {data:{"urlFileOriginale": dest, "archiviato": 1}});
-                    return null;
-                }
-                else{
-                    return "il file è già stato spostato";
-                }
+                // aggiorno il path nel DB
+                // aggiorno il path nel DB e imposto la variabile archiviato a 1, perchè e stato archiviato
+                strapi.service('api::file-stampa.file-stampa').update(idFile, {data:{"urlFileOriginale": dest, "archiviato": 1}});
+                return null;
             }
+            else{
+                return "il file è già stato spostato";
+            }
+            
 
         }
         ,

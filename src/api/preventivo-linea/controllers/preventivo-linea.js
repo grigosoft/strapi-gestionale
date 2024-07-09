@@ -44,9 +44,24 @@ module.exports = createCoreController('api::preventivo-linea.preventivo-linea',
     let soggetti = data.personalizzazione.soggetti;
     
     let file_soggetti = soggetti.map(soggetto => soggetto.files).flat();
-    
+
     //array da scorrere
-    let lista_file = files_personalizzazione.concat(file_soggetti);
+    let lista_file;
+    
+    if(files_personalizzazione != null && file_soggetti != null)
+      {
+        lista_file = files_personalizzazione.concat(file_soggetti);
+    
+      }else if(files_personalizzazione != null)
+      {
+        lista_file = files_personalizzazione;
+      }else if (file_soggetti != null)
+        {
+          lista_file = file_soggetti;
+        }else{
+          lista_file = [];
+        }
+        
 
     try {
       for(let i = 0; i < lista_file.length; i++) {
@@ -62,7 +77,15 @@ module.exports = createCoreController('api::preventivo-linea.preventivo-linea',
     }
     //strapi.service('api::file-stampa.file-stampa').spostaInArchivioOrdine(25, 2);
     //strapi.service('api::file-stampa.file-stampa').spostaDaPreventivoAOrdine(7, 4);
-    
+
+    //token: ctx.state.auth
+    //  id settire coprrente id stato settore + ctx.state.user.id + controllo  
+    let json_input = {'data': { 'preventivoLinea': response.data.id, 'stato': 1, 'settore': 1 }};
+
+    let lavorazione = await strapi.service("api::lavorazione.lavorazione").create(json_input, ctx);
+
+    console.log(lavorazione)
+
     return response;
   }
   

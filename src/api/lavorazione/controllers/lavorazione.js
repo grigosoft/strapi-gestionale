@@ -6,4 +6,5 @@
 
 const { createCoreController } = require('@strapi/strapi').factories;
 
-module.exports = createCoreController('api::lavorazione.lavorazione');
+module.exports = createCoreController('api::lavorazione.lavorazione'
+);
