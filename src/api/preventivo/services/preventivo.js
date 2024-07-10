@@ -50,7 +50,12 @@ module.exports = createCoreService('api::preventivo.preventivo',
         async create(params) {
             // applico anno e sequenza
             // TODO ancora da implementare, applicare solo se non compilato, prendre dalla data, ecc
-            console.log(params);
+            // console.log(params);
+            
+            // let permissions = await strapi.entityService.findMany("plugin::users-permissions.permission",{populate:"*"});
+            // console.log(permissions)
+            // let roles = await strapi.entityService.findMany("plugin::users-permissions.role",{populate:"*"});
+            // console.log(roles)
 
             params.numero = await strapi
             .service('api::sequenza-numerica.sequenza-numerica')
