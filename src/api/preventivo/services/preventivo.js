@@ -65,5 +65,9 @@ module.exports = createCoreService('api::preventivo.preventivo',
             const response = await super.create(params);
             return response;
         },
-        
+        async get_files(id)
+        {
+            let response = await strapi.entityService.findMany("api::preventivo.preventivo", {populate: {"linee": true}});
+            console.log(response);
+        }
     }));

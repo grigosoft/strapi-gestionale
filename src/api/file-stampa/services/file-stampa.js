@@ -221,9 +221,21 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
 
             await rename(scr_preventivo, dest_ordine);
             
-        }
+        },
 
-        //
+        async nome_cartella(nome)
+        {
+            if(typeof(nome) == "string"){
+                // ^ all'interno della parentesi quadra indica, insieme al resto, che voglio cercare tutto ciò che non è una lettera o un numero
+                nome = nome.replace(/[^a-zA-Z0-9àèìòùÀÈÌÒÙ]/g, "");
+                
+                if(nome.length > 15)
+                {
+                    nome = nome.substring(0, 15);
+                }
+            }
+            return nome;
+        }
 
 
     })

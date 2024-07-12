@@ -82,6 +82,7 @@ module.exports = createCoreController('api::file-stampa.file-stampa',
         // console.log(ctx.request.body)
         // @ts-ignore
         
+        //ctx.request.body.data = data
         ctx.request.body.data = JSON.stringify(data)
         // console.log(ctx.request.body)
         // creare l'anteprima
