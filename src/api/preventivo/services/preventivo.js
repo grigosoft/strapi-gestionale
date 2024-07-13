@@ -8,6 +8,7 @@ const { createCoreService } = require('@strapi/strapi').factories;
 const {formattaIndirizzoFatturazione, formattaIndirizzoSpedizione} = require('../../../utils/formattazione');
 
 module.exports = createCoreService('api::preventivo.preventivo',
+    // @ts-ignore
     ({strapi})=>({
         async inizializza(utente) {
             // applico anno e sequenza
@@ -67,7 +68,25 @@ module.exports = createCoreService('api::preventivo.preventivo',
         },
         async get_files(id)
         {
-            let response = await strapi.entityService.findMany("api::preventivo.preventivo", {populate: {"linee": true}});
-            console.log(response);
+            const preventivo = await strapi.service("api::preventivo.preventivo").findOne(id, {populate: '*'});
+            const files = [];
+
+            
+            for (let i = 0; i < preventivo.linee.length; i++) {
+                const id = preventivo.linee[i].id;
+                let prev_linee = await strapi.entityService.findOne("api::preventivo-linea.preventivo-linea", id, {populate: ["personalizzazione.files"]})
+
+                if(prev_linee.personalizzazione != null )
+                {
+                    if(prev_linee.personalizzazione.files.length != 0)
+                        files.push(prev_linee.personalizzazione.files);
+                
+                    // @ts-ignore
+                    if(prev_linee.personalizzazione.soggetti != null && prev_linee.personalizzazione.soggetti.files.length != 0)
+                        files.push(prev_linee.personalizzazione.files);
+                }
+            }
+            
+            return files.flat();
         }
     }));

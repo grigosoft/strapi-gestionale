@@ -5,6 +5,7 @@
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
+const { rename } = require('fs/promises');
 
 module.exports = createCoreController('api::utente.utente', 
     // @ts-ignore
@@ -29,8 +30,6 @@ module.exports = createCoreController('api::utente.utente',
                 {
                     let clienti = await strapi.service('api::dipendente.dipendente').getClientiRap(ctx.state.user.id);
                     
-                    console.log(clienti);
-
                     if(!clienti.find(cliente => cliente.id === id)){
                         return ctx.badRequest("richiesto un cliente non associato al rappresentante richiedente");
                     }
@@ -42,10 +41,6 @@ module.exports = createCoreController('api::utente.utente',
             return await super.findOne(ctx, id);
         },
         async create(ctx) {
-
-
-            console.log(ctx.request.body.data)
-            
             // @ts-ignore
             let richiesta = ctx.request.body.data;
 
@@ -57,49 +52,73 @@ module.exports = createCoreController('api::utente.utente',
             // @ts-ignore
             let nome =ctx.request.body.data.denominazione;
 
-            console.log(nome)
-
             let nomec = await strapi.service('api::file-stampa.file-stampa').nome_cartella(nome)
-
-            console.log(nomec)
-
             richiesta["nomeCartella"] = nomec;
-
-            //richiesta = JSON.stringify(richiesta);
 
             
             ctx.request.body.data = richiesta;
-            console.log(ctx.request.body)
-            //console.log(ctx.request.body.data)
             
+
+
             return await super.create(ctx);
         
         },
         async update(ctx) {
-            console.log(ctx)
+            let nome =ctx.request.body.data.denominazione;
+            let nomec = await strapi.service('api::file-stampa.file-stampa').nome_cartella(nome)
 
+            let nome_backup = ctx.request.body.data.denominazione;
+
+            ctx.request.body.data["nomeCartella"] = nomec;
+            
             if(ctx.state.user != null )
-            {
-                let id = 3;
-                if(await strapi.service('api::dipendente.dipendente').isRappresentante(ctx.state.user.id))
                 {
-                    let clienti = await strapi.service('api::dipendente.dipendente').getClientiRap(ctx.state.user.id);
-                    
-                    console.log(clienti);
-
-                    if(!clienti.find(cliente => cliente.id === id)){
-                        return ctx.badRequest("richiesto un cliente non associato al rappresentante richiedente");
-                    }
-                }
+                    let id = 3;
+                    if(await strapi.service('api::dipendente.dipendente').isRappresentante(ctx.state.user.id))
+                        {
+                            let clienti = await strapi.service('api::dipendente.dipendente').getClientiRap(ctx.state.user.id);
+                            
+                            if(!clienti.find(cliente => cliente.id === id)){
+                                return ctx.badRequest("richiesto un cliente non associato al rappresentante richiedente");
+                            }
+                        }
             }
             
+            //let response =  await super.update(ctx);
+            
+            // rename delle cartelle
+            change_path(ctx.params.id, ctx.request.body.data.denominazione);
 
 
             // @ts-ignore
             let files = await strapi.service("api::preventivo.preventivo").get_files(ctx.state.user.id);
 
-            return await super.update(ctx);
+
+            //return response;
         },
     })
 
 );
+
+async function change_path(id, nome)
+{
+    let response = await strapi.service("api::preventivo.preventivo").find({filters: {utente: id} }, {populate: "*"});
+    console.log(response);
+    let preventivi = response.results;
+    
+    
+    for(let i = 0; i < preventivi.length; i++)
+    {
+        let preventivo = await strapi.service("api::preventivo.preventivo").findOne(preventivi[i].id, {populate: "*"});
+        console.log(preventivo);
+        let lista_file = await strapi.service("api::preventivo.preventivo").get_files(preventivo.id);
+        console.log(lista_file);
+        let old_path = await strapi.service("api::file-stampa.file-stampa").toPathPreventivo(nome, preventivo.dati.anno, preventivo.id);
+        console.log(old_path);
+        let new_path = await strapi.service("api::file-stampa.file-stampa").toPathPreventivo(preventivo.utente.denominazione, preventivo.dati.anno, preventivo.id);
+        console.log(new_path);
+
+        await rename(old_path, new_path);
+    }
+
+}

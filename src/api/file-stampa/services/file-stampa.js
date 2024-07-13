@@ -111,7 +111,7 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
                 console.log("il file deve essere spostato")
                 // sposto il file
                 console.log("Prima: " + src);
-                dest = toPathPreventivo(nome, anno, resultPreventivo.id);
+                dest = await strapi.service("api::file-stampa.file-stampa").toPathPreventivo(nome, anno, resultPreventivo.id);
                 //il path è: private/archivio/S/CLIENT/2024/P_11 , ma non mi crea la cartella, perché?
                 console.log("Destinazione: " + dest);
                 await mkdir(dest, {recursive:true});
@@ -172,7 +172,7 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
             // controllo se è già stato spostato
             if(resultFile.archiviato == 0){
                 console.log("il file deve essere spostato")
-                dest = toPathOrdine(nome, anno, resultOrdine.id);
+                dest = await strapi.service("api::file-stampa.file-stampa").toPathOrdine(nome, anno, resultOrdine.id);
                 console.log("Destinazione: " + dest);
                 await mkdir(dest, {recursive:true});
                 dest += "/" + src.split("/")[src.split("/").length - 1];
@@ -212,12 +212,8 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
             console.log("Ordine: ");
             console.log(resultOrdine);
 
-            let scr_preventivo = toPathPreventivo(resultPreventivo.utente.denominazione, resultPreventivo.dati.anno, resultPreventivo.id);
-            let dest_ordine = toPathOrdine(resultOrdine.utente.denominazione, resultOrdine.dati.anno, resultOrdine.id);
-
-            console.log("Preventivo: " + scr_preventivo); //Preventivo: /Users/benini/GIT/strapi-gestionale/private/archivio/S/SUPERCLIENTERIC/2024/P_75
-
-            console.log("Ordine: " + dest_ordine);        //Ordine: /Users/benini/GIT/strapi-gestionale/private/archivio/S/SUPERCLIENTERIC/2024/3
+            let scr_preventivo = await strapi.service("api::files-stampa.file-stampa").toPathPreventivo(resultPreventivo.utente.denominazione, resultPreventivo.dati.anno, resultPreventivo.id);
+            let dest_ordine = await strapi.service("api::files-stampa.file-stampa").toPathOrdine(resultOrdine.utente.denominazione, resultOrdine.dati.anno, resultOrdine.id);
 
             await rename(scr_preventivo, dest_ordine);
             
@@ -235,98 +231,97 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
                 }
             }
             return nome;
+        },
+
+        // Metodo che restituisce il path in cui verrà salvato il file, dando come parametri il nome del cliente, l'anno e il numero del preventivo 
+        async toPathPreventivo(nome, anno, preventivo)
+        {
+            let path = "private/archivio/";
+            
+            if(typeof(nome) == "string"){
+                // ^ all'interno della parentesi quadra indica, insieme al resto, che voglio cercare tutto ciò che non è una lettera o un numero
+                nome = nome.replace(/[^a-zA-Z0-9àèìòùÀÈÌÒÙ]/g, "");
+                
+                if(nome.length > 15)
+                {
+                    nome = nome.substring(0, 15);
+                }
+            }
+            else{
+                return "il nome deve essere una stringa";
+            }
+        
+            let lettera = nome.charAt(0).toUpperCase();
+        
+            path += lettera + "/" + nome + "/";
+        
+            if(typeof(anno) == "number"){
+                anno = anno.toString();
+            }
+            else{
+                return "l'anno deve essere un numero o una stringa";
+            }
+        
+            path += anno + "/";
+        
+            if(typeof(preventivo) == "number" || typeof(preventivo) == "string"){
+                preventivo = preventivo.toString();
+            }
+            else{
+                return "l'ordine deve essere un numero o una stringa";
+            }
+        
+            path += "P_" + preventivo ;
+            
+            path = process.cwd() + "/" +  path;
+        
+            return path;
+        },
+        // Metodo che restituisce il path in cui verrà salvato il file, dando come parametri il nome del cliente, l'anno e il numero dell'ordine
+        async toPathOrdine(nome, anno, ordine)
+        {
+            let path = "private/archivio/";
+            
+            if(typeof(nome) == "string"){
+                // ^ all'interno della parentesi quadra indica, insieme al resto, che voglio cercare tutto ciò che non è una lettera o un numero
+                nome = nome.replace(/[^a-zA-Z0-9àèìòùÀÈÌÒÙ]/g, "");
+                
+                if(nome.length > 15)
+                {
+                    nome = nome.substring(0, 15);
+                }
+            }
+            else{
+                return "il nome deve essere una stringa";
+            }
+        
+            let lettera = nome.charAt(0).toUpperCase();
+        
+            path += lettera + "/" + nome + "/";
+        
+            if(typeof(anno) == "number"){
+                anno = anno.toString();
+            }
+            else{
+                return "l'anno deve essere un numero o una stringa";
+            }
+        
+            path += anno + "/";
+        
+            if(typeof(ordine) == "number" || typeof(ordine) == "string"){
+                ordine = ordine.toString();
+            }
+            else{
+                return "l'ordine deve essere un numero o una stringa";
+            }
+        
+            path += ordine ;
+            
+            path = process.cwd() + "/" +  path;
+        
+            return path;
         }
-
-
     })
 );
 
-// Metodo che restituisce il path in cui verrà salvato il file, dando come parametri il nome del cliente, l'anno e il numero del preventivo 
-function toPathPreventivo(nome, anno, preventivo)
-{
-    let path = "private/archivio/";
-    
-    if(typeof(nome) == "string"){
-        // ^ all'interno della parentesi quadra indica, insieme al resto, che voglio cercare tutto ciò che non è una lettera o un numero
-        nome = nome.replace(/[^a-zA-Z0-9àèìòùÀÈÌÒÙ]/g, "");
-        
-        if(nome.length > 15)
-        {
-            nome = nome.substring(0, 15);
-        }
-    }
-    else{
-        return "il nome deve essere una stringa";
-    }
 
-    let lettera = nome.charAt(0).toUpperCase();
-
-    path += lettera + "/" + nome + "/";
-
-    if(typeof(anno) == "number"){
-        anno = anno.toString();
-    }
-    else{
-        return "l'anno deve essere un numero o una stringa";
-    }
-
-    path += anno + "/";
-
-    if(typeof(preventivo) == "number" || typeof(preventivo) == "string"){
-        preventivo = preventivo.toString();
-    }
-    else{
-        return "l'ordine deve essere un numero o una stringa";
-    }
-
-    path += "P_" + preventivo ;
-    
-    path = process.cwd() + "/" +  path;
-
-    return path;
-}
-
-// Metodo che restituisce il path in cui verrà salvato il file, dando come parametri il nome del cliente, l'anno e il numero dell'ordine
-function toPathOrdine(nome, anno, ordine)
-{
-    let path = "private/archivio/";
-    
-    if(typeof(nome) == "string"){
-        // ^ all'interno della parentesi quadra indica, insieme al resto, che voglio cercare tutto ciò che non è una lettera o un numero
-        nome = nome.replace(/[^a-zA-Z0-9àèìòùÀÈÌÒÙ]/g, "");
-        
-        if(nome.length > 15)
-        {
-            nome = nome.substring(0, 15);
-        }
-    }
-    else{
-        return "il nome deve essere una stringa";
-    }
-
-    let lettera = nome.charAt(0).toUpperCase();
-
-    path += lettera + "/" + nome + "/";
-
-    if(typeof(anno) == "number"){
-        anno = anno.toString();
-    }
-    else{
-        return "l'anno deve essere un numero o una stringa";
-    }
-
-    path += anno + "/";
-
-    if(typeof(ordine) == "number" || typeof(ordine) == "string"){
-        ordine = ordine.toString();
-    }
-    else{
-        return "l'ordine deve essere un numero o una stringa";
-    }
-
-    path += ordine ;
-    
-    path = process.cwd() + "/" +  path;
-
-    return path;
-}
