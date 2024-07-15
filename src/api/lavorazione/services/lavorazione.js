@@ -1,62 +1,72 @@
 'use strict';
 
+const { context } = require('esbuild');
+
 /**
  * lavorazione service
  */
 
 const { createCoreService } = require('@strapi/strapi').factories;
+const { inserisci_auth_utente_in_params } = require('../../../utils/parametri');
 
 module.exports = createCoreService('api::lavorazione.lavorazione',
     // @ts-ignore
     ({strapi}) =>({
 
-        async create(data, ctx){
+        async create(data){
+            console.log(data)
+            // @ts-ignore
+            let avanzamento = await strapi.service('api::lavorazione.lavorazione').create_avanzamento(data);
+
+
+            data.data["avanzamento"] = [avanzamento];
+
+
+            // @ts-ignore
+            // let lavorazione = await strapi.entityService.create("api::lavorazione.lavorazione", {data: { "preventivoLinea": id_preventivo.id, "statoSettore": stato.nome, "settoreCorrente": settore.nome, "avanzamento": avanzamento }});
+
+            return super.create(data);
+        },
+        async update(data)
+        {
             console.log(data);
 
-            let dipendente = "sconosciuto"
-
-            if(ctx != null)
-            {
-                if(ctx.state.user == null){
-                    dipendente=ctx.state.auth
-                    console.log(dipendente)
-                    dipendente = "Token: " + dipendente;
-                }else {
-                dipendente = ctx.state.user.id ;    
-                // @ts-ignore
-                dipendente = await strapi.entityService.findOne("api::dipendente.dipendente", dipendente);
-                }
-
-                console.log(dipendente);
-            }
             let id_preventivo = data.data.preventivoLinea;
             let stato = data.data.stato;
             let settore = data.data.settore;
 
+            let new_avanzamento = await strapi.service("api::lavorazione.lavorazione").create_avanzamento(data);
 
-            console.log("ID Preventivo:" + id_preventivo);
-            id_preventivo = await strapi.entityService.findOne("api::preventivo-linea.preventivo-linea", id_preventivo, {populate: ["preventivo", "lavorazione"],});
-            console.log("Preventivo:")  
-            console.log(id_preventivo);
+        },
+        async create_avanzamento(data){
+
+            let id_preventivo = data.data.preventivoLinea;
+            let stato = data.data.statoSettore
+            let settore = data.data.settoreCorrente
 
             stato = await strapi.entityService.findOne("api::stato-settore.stato-settore", stato, {populate: ["settore"],});
             console.log("Stato:")
             console.log(stato);
 
-            settore = await strapi.entityService.findOne("api::settore.settore" , settore);
+            settore = stato.settore
             console.log("Settore:")
             console.log(settore);
 
-            // @ts-ignore
-            let avanzamento = [{ "PreventivoLinea": id_preventivo.id, "StatoSettore": stato.nome, "Settore": settore.nome, "Dipendente": dipendente.nome, "Data": new Date() }]
+            let dipendente = "sconosciuto"
+
+            if(data.data.dipendente != null)
+            {
+                let dati_d = (await strapi.entityService.findOne("api::dipendente.dipendente", data.data.dipendente));
+                dipendente = dati_d.nome + " " + dati_d.cognome;
+            }else if(data.data.token != null){
+                dipendente =  "token: "+ data.data.token;
+            }
+            
+            let avanzamento = { "PreventivoLinea": id_preventivo, "statoSettore": stato.nome, "settoreCorrente": settore.nome, "Dipendente": dipendente, "Data": new Date() }
+
             console.log("Avanzamento:")
             console.log(avanzamento);
-
-            // @ts-ignore
-            //TODO: CHIEDE AD ANTONIO SE VA BENE CON DATA, o se devo mettere in base ai valori trovati sopra |=> in teoria va bene cosi però
-            let lavorazione = await strapi.entityService.create("api::lavorazione.lavorazione", {data: { "preventivoLinea": id_preventivo.id, "statoSettore": data.data.stato, "settoreCorrente": data.data.settore, "avanzamento": avanzamento }});
-        
-            return lavorazione;
+            return avanzamento;
         }
     })
 );

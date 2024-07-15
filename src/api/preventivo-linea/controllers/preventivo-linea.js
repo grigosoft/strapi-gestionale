@@ -6,6 +6,7 @@
 const { sanitize, validate } = require("@strapi/utils");
 
 const { createCoreController } = require('@strapi/strapi').factories;
+const {inserisci_auth_utente_in_params } = require('../../../utils/parametri');
 
 module.exports = createCoreController('api::preventivo-linea.preventivo-linea',
 ({strapi})=>({
@@ -64,6 +65,7 @@ module.exports = createCoreController('api::preventivo-linea.preventivo-linea',
         
 
     try {
+      console.log(lista_file.length)
       for(let i = 0; i < lista_file.length; i++) {
         console.log(lista_file[i])
         // Ensure each file is processed in order
@@ -77,12 +79,18 @@ module.exports = createCoreController('api::preventivo-linea.preventivo-linea',
     }
     //strapi.service('api::file-stampa.file-stampa').spostaInArchivioOrdine(25, 2);
     //strapi.service('api::file-stampa.file-stampa').spostaDaPreventivoAOrdine(7, 4);
-
+    let json_input  = {'data': { 'preventivoLinea': response.data.id, 'statoSettore': 1, 'settoreCorrente': 1 }};
+    
+    inserisci_auth_utente_in_params(ctx, json_input.data);
+    console.log("ctx:")
+    console.log(ctx.state.auth)
+    console.log("\n\n\n")
+    
     //token: ctx.state.auth
-    //  id settire coprrente id stato settore + ctx.state.user.id + controllo  
-    let json_input = {'data': { 'preventivoLinea': response.data.id, 'stato': 1, 'settore': 1 }};
+    //  id settore corrente, id stato settore + ctx.state.user.id + controllo  
+    console.log(json_input);
 
-    let lavorazione = await strapi.service("api::lavorazione.lavorazione").create(json_input, ctx);
+    let lavorazione = await strapi.service("api::lavorazione.lavorazione").create(json_input);
 
     console.log(lavorazione)
 

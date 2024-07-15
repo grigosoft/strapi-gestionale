@@ -84,7 +84,7 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
             
             // controllo se esiste il file
             if(null == resultFile)
-                throw new ApplicationError("il file non esiste");
+                throw new ApplicationError("il file non esiste"); //FIXME : controllare perchè tra token e autenticazione da errori diversi
 
             console.log("\n\nPreventivo da spostare:");
             console.log(resultPreventivo);
