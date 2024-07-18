@@ -5,7 +5,7 @@
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
-const { rename } = require('fs/promises');
+const { rename, mkdir, cp } = require('fs/promises');
 
 module.exports = createCoreController('api::utente.utente', 
     // @ts-ignore
@@ -67,7 +67,7 @@ module.exports = createCoreController('api::utente.utente',
             let nome =ctx.request.body.data.denominazione;
             let nomec = await strapi.service('api::file-stampa.file-stampa').nome_cartella(nome)
 
-            let nome_backup = ctx.request.body.data.denominazione;
+            let nome_backup = (await strapi.entityService.findOne("api::utente.utente", ctx.params.id)).denominazione;
 
             ctx.request.body.data["nomeCartella"] = nomec;
             
@@ -84,10 +84,10 @@ module.exports = createCoreController('api::utente.utente',
                         }
             }
             
-            //let response =  await super.update(ctx);
+            let response =  await super.update(ctx);
             
             // rename delle cartelle
-            change_path(ctx.params.id, ctx.request.body.data.denominazione);
+            change_path(ctx.params.id, nome_backup);
 
 
             // @ts-ignore
@@ -102,9 +102,14 @@ module.exports = createCoreController('api::utente.utente',
 
 async function change_path(id, nome)
 {
-    let response = await strapi.service("api::preventivo.preventivo").find({filters: {utente: id} }, {populate: "*"});
+    // trovare tutti i preventivi associati all'utente
+    // @ts-ignore
+    let response = await strapi.entityService.findMany("api::preventivo.preventivo",{filters: {utente: id}, populate: ["personalizzazione", "personalizzazione.files", "lavorazione", "personalizzazione.soggetti", "personalizzazione.soggetti.files"]});
+    let utente = await strapi.entityService.findOne("api::utente.utente", id);
     console.log(response);
     let preventivi = response.results;
+    console.log("preventivi:")
+    console.log(preventivi);
     
     
     for(let i = 0; i < preventivi.length; i++)
@@ -115,10 +120,29 @@ async function change_path(id, nome)
         console.log(lista_file);
         let old_path = await strapi.service("api::file-stampa.file-stampa").toPathPreventivo(nome, preventivo.dati.anno, preventivo.id);
         console.log(old_path);
-        let new_path = await strapi.service("api::file-stampa.file-stampa").toPathPreventivo(preventivo.utente.denominazione, preventivo.dati.anno, preventivo.id);
+        let new_path = await strapi.service("api::file-stampa.file-stampa").toPathPreventivo(utente.denominazione, preventivo.dati.anno, preventivo.id);
         console.log(new_path);
 
-        await rename(old_path, new_path);
+        try{
+            await mkdir(new_path, {recursive: true});
+        }catch(e)
+        {
+            console.log(e);
+        }
+
+
+        try {
+            await rename(old_path, new_path);
+        } catch (error) {
+            if(error.code === 'ENOENT')
+            {
+                console.log("cartella non trovata");
+            }
+            else if(error.code === 'EACCES')
+            {
+                await cp(old_path, new_path, {recursive: true});
+            }
+        }
     }
 
 }
