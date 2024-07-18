@@ -12,7 +12,6 @@ module.exports = createCoreController('api::lavorazione.lavorazione',
         async update(ctx)
         {
             inserisci_auth_utente_in_params(ctx);
-            console.log(ctx);
             return super.update(ctx);
         }
 

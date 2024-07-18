@@ -216,6 +216,8 @@ module.exports = createCoreService('api::file-stampa.file-stampa',
             let dest_ordine = await strapi.service("api::files-stampa.file-stampa").toPathOrdine(resultOrdine.utente.denominazione, resultOrdine.dati.anno, resultOrdine.id);
 
             await rename(scr_preventivo, dest_ordine);
+
+            //TODO: cambiare i path
             
         },
 

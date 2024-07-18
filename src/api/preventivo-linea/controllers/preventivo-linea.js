@@ -33,6 +33,7 @@ module.exports = createCoreController('api::preventivo-linea.preventivo-linea',
   },
     
   async create(ctx) {
+
     // @ts-ignore
     const data = ctx.request.body.data;
     //console.log(data);
@@ -82,9 +83,7 @@ module.exports = createCoreController('api::preventivo-linea.preventivo-linea',
     let json_input  = {'data': { 'preventivoLinea': response.data.id, 'statoSettore': 1, 'settoreCorrente': 1 }};
     
     inserisci_auth_utente_in_params(ctx, json_input.data);
-    console.log("ctx:")
-    console.log(ctx.state.auth)
-    console.log("\n\n\n")
+
     
     //token: ctx.state.auth
     //  id settore corrente, id stato settore + ctx.state.user.id + controllo  
@@ -93,6 +92,7 @@ module.exports = createCoreController('api::preventivo-linea.preventivo-linea',
     let lavorazione = await strapi.service("api::lavorazione.lavorazione").create(json_input);
 
     console.log(lavorazione)
+
 
     return response;
   }

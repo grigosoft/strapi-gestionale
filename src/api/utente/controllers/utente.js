@@ -68,6 +68,10 @@ module.exports = createCoreController('api::utente.utente',
             let nomec = await strapi.service('api::file-stampa.file-stampa').nome_cartella(nome)
 
             let nome_backup = (await strapi.entityService.findOne("api::utente.utente", ctx.params.id)).denominazione;
+            let nome_cartella_backup = (await strapi.entityService.findOne("api::utente.utente", ctx.params.id)).nomeCartella;
+
+            let src_path = process.cwd() + "/private/archivio/"+ nome_backup.split("")[0].toUpperCase() + "/"+  nome_cartella_backup;
+            let dest_path = process.cwd() + "/private/archivio/"+ nome.split("")[0].toUpperCase() + "/"+  nomec;
 
             ctx.request.body.data["nomeCartella"] = nomec;
             
@@ -85,21 +89,23 @@ module.exports = createCoreController('api::utente.utente',
             }
             
             let response =  await super.update(ctx);
+
+            await Change_path(src_path, dest_path);
             
             // rename delle cartelle
-            change_path(ctx.params.id, nome_backup);
 
 
             // @ts-ignore
             let files = await strapi.service("api::preventivo.preventivo").get_files(ctx.state.user.id);
 
 
-            //return response;
+            return response;
         },
     })
 
 );
 
+/*
 async function change_path(id, nome)
 {
     // trovare tutti i preventivi associati all'utente
@@ -145,4 +151,14 @@ async function change_path(id, nome)
         }
     }
 
+}*/
+
+async function Change_path(path_s, path_d)
+{
+    try {
+        await mkdir(path_d, { recursive: true });
+        await rename(path_s, path_d);
+    } catch (err) {
+        console.error(`Rename failed: ${err}`);
+    }
 }
